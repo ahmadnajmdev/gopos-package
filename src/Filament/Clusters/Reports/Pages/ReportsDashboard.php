@@ -124,6 +124,44 @@ class ReportsDashboard extends Page
                     ],
                 ],
             ],
+            [
+                'title' => __('HR & Employee Reports'),
+                'description' => __('Employee attendance, leave, payroll, and workforce analytics'),
+                'icon' => 'heroicon-o-identification',
+                'color' => 'cyan',
+                'reports' => [
+                    [
+                        'title' => __('Attendance Report'),
+                        'url' => AttendanceReportPage::getUrl(),
+                        'icon' => 'heroicon-o-clock',
+                    ],
+                    [
+                        'title' => __('Leave Report'),
+                        'url' => LeaveReportPage::getUrl(),
+                        'icon' => 'heroicon-o-calendar-days',
+                    ],
+                    [
+                        'title' => __('Payroll Summary Report'),
+                        'url' => PayrollSummaryReportPage::getUrl(),
+                        'icon' => 'heroicon-o-banknotes',
+                    ],
+                    [
+                        'title' => __('Employee Headcount Report'),
+                        'url' => EmployeeHeadcountReportPage::getUrl(),
+                        'icon' => 'heroicon-o-user-group',
+                    ],
+                    [
+                        'title' => __('Overtime Report'),
+                        'url' => OvertimeReportPage::getUrl(),
+                        'icon' => 'heroicon-o-arrow-trending-up',
+                    ],
+                    [
+                        'title' => __('Loan Report'),
+                        'url' => LoanReportPage::getUrl(),
+                        'icon' => 'heroicon-o-credit-card',
+                    ],
+                ],
+            ],
         ];
     }
 }
