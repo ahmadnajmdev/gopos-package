@@ -3,13 +3,16 @@
 namespace Gopos\Models;
 
 use Gopos\Models\Concerns\Auditable;
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
     use Auditable;
+    use BelongsToBranch;
 
     protected $fillable = [
+        'branch_id',
         'expense_date',
         'expense_type_id',
         'cost_center_id',

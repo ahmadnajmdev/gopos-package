@@ -15,6 +15,7 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),

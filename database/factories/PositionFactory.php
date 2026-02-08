@@ -17,6 +17,7 @@ class PositionFactory extends Factory
         $minSalary = $this->faker->numberBetween(500, 3000);
 
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'title' => $this->faker->unique()->jobTitle(),
             'min_salary' => $minSalary,
             'max_salary' => $minSalary + $this->faker->numberBetween(500, 2000),

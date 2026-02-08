@@ -2,12 +2,16 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HeldSale extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'user_id',
         'pos_session_id',
         'customer_id',

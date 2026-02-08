@@ -16,7 +16,7 @@ class FinancialReport extends BaseReport
         'amount' => ['label' => 'Amount', 'type' => 'currency'],
     ];
 
-    public function getData(string $startDate, string $endDate): array
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): array
     {
         // Get financial data using the refactored service
         $income = FinancialService::getIncome($startDate, $endDate);

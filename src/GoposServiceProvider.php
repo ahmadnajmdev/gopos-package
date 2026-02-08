@@ -162,6 +162,7 @@ class GoposServiceProvider extends ServiceProvider
             \Gopos\Models\Leave::class => \Gopos\Policies\LeavePolicy::class,
             \Gopos\Models\Holiday::class => \Gopos\Policies\HolidayPolicy::class,
             \Gopos\Models\Payroll::class => \Gopos\Policies\PayrollPolicy::class,
+            \Gopos\Models\Branch::class => \Gopos\Policies\BranchPolicy::class,
         ];
 
         foreach ($policies as $model => $policy) {

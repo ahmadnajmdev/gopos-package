@@ -2,13 +2,17 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PosSession extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'user_id',
         'terminal_id',
         'opening_time',

@@ -2,13 +2,17 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SaleReturn extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'sale_id',
         'currency_id',
         'exchange_rate',
@@ -55,9 +59,18 @@ class SaleReturn extends Model
 
     public static function generateSaleReturnNumber(): string
     {
-        $last = self::latest()->first();
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-SR-';
+        $prefixLength = strlen($prefix);
 
-        return $last ? 'SR-'.str_pad($last->id + 1, 5, '0', STR_PAD_LEFT) : 'SR-00001';
+        $lastNumber = static::query()
+            ->where('sale_return_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(sale_return_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
+            ->value('max_num');
+
+        $nextNumber = ($lastNumber ?? 0) + 1;
+
+        return $prefix.str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 
     public function currency()

@@ -5,12 +5,15 @@ namespace Gopos\Filament\Clusters\Reports\Pages;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Gopos\Filament\Clusters\Reports\ReportsCluster;
+use Gopos\Models\Branch;
 use Gopos\Services\Reports\BaseReport;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
@@ -51,6 +54,8 @@ abstract class BaseReportPage extends Page implements HasForms
         $this->form->fill([
             'startDate' => now()->startOfMonth()->format('Y-m-d'),
             'endDate' => now()->endOfMonth()->format('Y-m-d'),
+            'branch_id' => null,
+            'all_branches' => false,
         ]);
     }
 
@@ -60,6 +65,22 @@ abstract class BaseReportPage extends Page implements HasForms
             ->schema([
                 Section::make(__('Report Filters'))
                     ->schema([
+                        Select::make('branch_id')
+                            ->label(__('Branch'))
+                            ->options(function () {
+                                if (auth()->user()->isSuperAdmin()) {
+                                    return Branch::query()->pluck('name', 'id');
+                                }
+
+                                return auth()->user()->branches()->pluck('name', 'branches.id');
+                            })
+                            ->placeholder(__('Current Branch'))
+                            ->visible(fn () => auth()->user()->isSuperAdmin() || auth()->user()->branches()->count() > 1)
+                            ->live(),
+                        Toggle::make('all_branches')
+                            ->label(__('All Branches'))
+                            ->visible(fn () => auth()->user()->isSuperAdmin())
+                            ->live(),
                         DatePicker::make('startDate')
                             ->label(__('Start Date'))
                             ->required()
@@ -68,7 +89,7 @@ abstract class BaseReportPage extends Page implements HasForms
                             ->label(__('End Date'))
                             ->required()
                             ->live(),
-                    ])->columns(2),
+                    ])->columns(4),
             ])
             ->statePath('data');
     }
@@ -88,7 +109,11 @@ abstract class BaseReportPage extends Page implements HasForms
         try {
             $data = $this->form->getState();
             $report = $this->getReportInstance();
-            $reportData = $report->getData($data['startDate'], $data['endDate']);
+
+            $branchId = $data['branch_id'] ?? null;
+            $allBranches = $data['all_branches'] ?? false;
+
+            $reportData = $report->getData($data['startDate'], $data['endDate'], $branchId, $allBranches);
 
             $mpdf = $this->configureMpdf();
 
@@ -119,7 +144,10 @@ abstract class BaseReportPage extends Page implements HasForms
         $formData = $this->form->getState();
         $report = $this->getReportInstance();
 
-        return $report->getData($formData['startDate'], $formData['endDate']);
+        $branchId = $formData['branch_id'] ?? null;
+        $allBranches = $formData['all_branches'] ?? false;
+
+        return $report->getData($formData['startDate'], $formData['endDate'], $branchId, $allBranches);
     }
 
     protected function configureMpdf(): Mpdf

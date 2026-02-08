@@ -16,6 +16,7 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'account_type_id' => AccountType::first()?->id ?? AccountType::factory(),
             'code' => $this->faker->unique()->numerify('####'),
             'name' => $this->faker->words(3, true),

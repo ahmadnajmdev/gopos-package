@@ -33,6 +33,8 @@ class TaxCodeResource extends Resource
 
     protected static ?int $navigationSort = 20;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Accounting');

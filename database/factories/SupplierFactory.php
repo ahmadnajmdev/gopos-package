@@ -15,6 +15,7 @@ class SupplierFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'name' => $this->faker->company(),
             'email' => $this->faker->unique()->companyEmail(),
             'phone' => $this->faker->phoneNumber(),

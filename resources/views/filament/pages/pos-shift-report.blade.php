@@ -15,7 +15,7 @@
             </div>
             <x-filament::button
                 tag="a"
-                href="{{ route('filament.admin.pages.pos-shift-management') }}"
+                href="{{ \Gopos\Filament\Pages\PosShiftManagement::getUrl() }}"
                 color="gray"
             >
                 <x-heroicon-o-arrow-left class="w-4 h-4 mr-2" />

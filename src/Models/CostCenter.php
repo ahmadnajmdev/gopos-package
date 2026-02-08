@@ -2,6 +2,7 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,10 @@ use Illuminate\Support\Collection;
 
 class CostCenter extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'parent_id',
         'code',
         'name',

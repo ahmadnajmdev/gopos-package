@@ -18,15 +18,14 @@ class IncomeStatementReport extends BaseReport
         'amount' => ['label' => 'Amount', 'label_ar' => 'المبلغ', 'type' => 'currency'],
     ];
 
-    public function getData(string $startDate, string $endDate): array
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): array
     {
-
         $baseCurrency = Currency::getBaseCurrency();
         $currencySymbol = $baseCurrency?->symbol ?? 'IQD';
 
         // Get revenue and expense details
-        $revenueDetails = $this->getAccountDetails(4, $startDate, $endDate); // Revenue
-        $expenseDetails = $this->getAccountDetails(5, $startDate, $endDate); // Expense
+        $revenueDetails = $this->getAccountDetails(4, $startDate, $endDate, $branchId, $allBranches); // Revenue
+        $expenseDetails = $this->getAccountDetails(5, $startDate, $endDate, $branchId, $allBranches); // Expense
 
         // Calculate totals
         $totalRevenue = collect($revenueDetails)->sum('balance');
@@ -87,9 +86,18 @@ class IncomeStatementReport extends BaseReport
         ];
     }
 
-    protected function getAccountDetails(int $typeId, string $startDate, string $endDate): array
+    protected function getAccountDetails(int $typeId, string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): array
     {
-        $accounts = Account::where('account_type_id', $typeId)
+        $query = Account::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        $accounts = $query->where('account_type_id', $typeId)
             ->where('is_active', true)
             ->orderBy('code')
             ->get();

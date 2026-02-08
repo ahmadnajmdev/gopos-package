@@ -24,9 +24,18 @@ class EmployeeHeadcountReport extends BaseReport
 
     protected array $totalColumns = ['active_count', 'on_leave_count', 'suspended_count', 'terminated_count', 'resigned_count', 'total'];
 
-    public function getData(string $startDate, string $endDate): Collection
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection
     {
-        $employees = Employee::query()
+        $query = Employee::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        $employees = $query
             ->with('department')
             ->whereBetween('hire_date', [$startDate, $endDate])
             ->orWhere('hire_date', '<=', $endDate)

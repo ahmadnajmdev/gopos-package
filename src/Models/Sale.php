@@ -3,6 +3,7 @@
 namespace Gopos\Models;
 
 use Gopos\Models\Concerns\Auditable;
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,9 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sale extends Model
 {
     use Auditable;
+    use BelongsToBranch;
     use HasFactory;
 
     protected $fillable = [
+        'branch_id',
         'pos_session_id',
         'sale_date',
         'sale_number',
@@ -169,12 +172,17 @@ class Sale extends Model
 
     public static function generateSaleNumber(): string
     {
-        // Get the maximum sale number and extract the numeric part
-        $lastNumber = Sale::selectRaw('MAX(CAST(SUBSTRING(sale_number, 5) AS UNSIGNED)) as max_num')
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-INV-';
+        $prefixLength = strlen($prefix);
+
+        $lastNumber = static::query()
+            ->where('sale_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(sale_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
             ->value('max_num');
 
         $nextNumber = ($lastNumber ?? 0) + 1;
 
-        return 'INV-'.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        return $prefix.str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }

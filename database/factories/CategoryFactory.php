@@ -15,6 +15,7 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'name' => $this->faker->unique()->randomElement([
                 'Electronics', 'Food & Beverages', 'Clothing', 'Home & Garden',
                 'Sports', 'Books', 'Toys', 'Health', 'Beauty', 'Automotive',

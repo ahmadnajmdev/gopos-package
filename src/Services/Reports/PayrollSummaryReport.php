@@ -23,9 +23,18 @@ class PayrollSummaryReport extends BaseReport
 
     protected array $totalColumns = ['employee_count', 'total_basic', 'total_bonuses', 'total_overtime', 'total_deductions', 'total_net_pay'];
 
-    public function getData(string $startDate, string $endDate): Collection
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection
     {
-        $payrolls = Payroll::query()
+        $query = Payroll::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        $payrolls = $query
             ->with('employee.department')
             ->whereBetween('pay_period_start', [$startDate, $endDate])
             ->get();

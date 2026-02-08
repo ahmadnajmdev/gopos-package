@@ -2,6 +2,7 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class JournalEntry extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'entry_number',
         'entry_date',
         'reference_type',
@@ -108,16 +112,20 @@ class JournalEntry extends Model
 
     // Methods
 
-    /**
-     * Generate unique entry number
-     */
     public static function generateEntryNumber(): string
     {
-        $lastEntry = static::orderBy('id', 'desc')->first();
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-JE-';
+        $prefixLength = strlen($prefix);
 
-        $nextNumber = $lastEntry ? ((int) substr($lastEntry->entry_number, 3)) + 1 : 1;
+        $lastNumber = static::query()
+            ->where('entry_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(entry_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
+            ->value('max_num');
 
-        return 'JE-'.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        $nextNumber = ($lastNumber ?? 0) + 1;
+
+        return $prefix.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 
     /**

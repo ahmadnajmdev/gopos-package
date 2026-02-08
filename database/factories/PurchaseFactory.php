@@ -19,6 +19,7 @@ class PurchaseFactory extends Factory
         $subTotal = $this->faker->randomFloat(2, 100, 5000);
 
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'purchase_number' => 'PUR-'.$this->faker->unique()->numerify('#####'),
             'purchase_date' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'supplier_id' => Supplier::factory(),

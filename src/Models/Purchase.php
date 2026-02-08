@@ -3,6 +3,7 @@
 namespace Gopos\Models;
 
 use Gopos\Models\Concerns\Auditable;
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,9 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Purchase extends Model
 {
     use Auditable;
+    use BelongsToBranch;
     use HasFactory;
 
     protected $fillable = [
+        'branch_id',
         'purchase_number',
         'purchase_date',
         'supplier_id',
@@ -112,8 +115,17 @@ class Purchase extends Model
 
     public static function generatePurchaseNumber(): string
     {
-        $lastPurchase = Purchase::latest()->first();
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-PUR-';
+        $prefixLength = strlen($prefix);
 
-        return $lastPurchase ? 'PUR-'.str_pad($lastPurchase->id + 1, 5, '0', STR_PAD_LEFT) : 'PUR-00001';
+        $lastNumber = static::query()
+            ->where('purchase_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(purchase_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
+            ->value('max_num');
+
+        $nextNumber = ($lastNumber ?? 0) + 1;
+
+        return $prefix.str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 }

@@ -17,6 +17,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'name' => $this->faker->words(3, true),
             'category_id' => Category::factory(),
             'unit_id' => Unit::factory(),

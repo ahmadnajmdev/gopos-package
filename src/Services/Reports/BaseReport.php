@@ -15,7 +15,7 @@ abstract class BaseReport
 
     protected array $totalColumns = [];
 
-    abstract public function getData(string $startDate, string $endDate): Collection|array;
+    abstract public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection|array;
 
     public function getTitle(): string
     {

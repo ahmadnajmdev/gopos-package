@@ -28,6 +28,8 @@ class PermissionResource extends Resource
 
     protected static ?int $navigationSort = 16;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Settings');

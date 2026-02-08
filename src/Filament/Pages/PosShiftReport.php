@@ -19,14 +19,16 @@ class PosShiftReport extends Page
 
     public array $summary = [];
 
-    public function mount(?int $session = null): void
+    public function mount(): void
     {
-        if (! $session) {
+        $sessionId = request()->integer('sessionId');
+
+        if (! $sessionId) {
             abort(404);
         }
 
         $this->session = PosSession::with(['user', 'transactions', 'transactions.currency'])
-            ->findOrFail($session);
+            ->findOrFail($sessionId);
 
         // Ensure user can only see their own sessions (or is admin)
         if ($this->session->user_id !== auth()->id() && ! auth()->user()->hasRole('super_admin')) {

@@ -3,6 +3,7 @@
 namespace Gopos\Models;
 
 use Gopos\Models\Concerns\Auditable;
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,8 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class StockTransfer extends Model
 {
     use Auditable;
+    use BelongsToBranch;
 
     protected $fillable = [
+        'branch_id',
         'transfer_number',
         'from_warehouse_id',
         'to_warehouse_id',
@@ -77,11 +80,18 @@ class StockTransfer extends Model
 
     public static function generateTransferNumber(): string
     {
-        $lastNumber = static::selectRaw('MAX(CAST(SUBSTRING(transfer_number, 4) AS UNSIGNED)) as max_num')
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-TR-';
+        $prefixLength = strlen($prefix);
+
+        $lastNumber = static::query()
+            ->where('transfer_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(transfer_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
             ->value('max_num');
+
         $nextNumber = ($lastNumber ?? 0) + 1;
 
-        return 'TR-'.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        return $prefix.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 
     public function getTotalValueAttribute(): float

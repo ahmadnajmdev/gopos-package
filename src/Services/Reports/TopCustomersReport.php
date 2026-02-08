@@ -23,13 +23,22 @@ class TopCustomersReport extends BaseReport
 
     protected array $totalColumns = ['total_orders', 'total_amount'];
 
-    public function getData(string $startDate, string $endDate): Collection
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection
     {
         $baseCurrency = Currency::getBaseCurrency();
         $decimalPlaces = $baseCurrency?->decimal_places ?? 2;
         $currency = $baseCurrency?->symbol ?? $baseCurrency?->code;
 
-        return Customer::query()
+        $query = Customer::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        return $query
             ->with(['sales' => function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('sale_date', [$startDate, $endDate]);
             }])

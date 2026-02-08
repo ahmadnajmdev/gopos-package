@@ -3,6 +3,7 @@
 namespace Gopos\Models;
 
 use Gopos\Models\Concerns\Auditable;
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,8 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class StockCount extends Model
 {
     use Auditable;
+    use BelongsToBranch;
 
     protected $fillable = [
+        'branch_id',
         'count_number',
         'warehouse_id',
         'type',
@@ -69,11 +72,18 @@ class StockCount extends Model
 
     public static function generateCountNumber(): string
     {
-        $lastNumber = static::selectRaw('MAX(CAST(SUBSTRING(count_number, 4) AS UNSIGNED)) as max_num')
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-SC-';
+        $prefixLength = strlen($prefix);
+
+        $lastNumber = static::query()
+            ->where('count_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(count_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
             ->value('max_num');
+
         $nextNumber = ($lastNumber ?? 0) + 1;
 
-        return 'SC-'.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        return $prefix.str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 
     public function getTotalVarianceAttribute(): float

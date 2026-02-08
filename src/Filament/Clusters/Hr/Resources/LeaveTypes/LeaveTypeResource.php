@@ -30,6 +30,8 @@ class LeaveTypeResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Leave Management');

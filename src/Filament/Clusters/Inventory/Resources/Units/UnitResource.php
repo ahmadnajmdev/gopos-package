@@ -30,6 +30,8 @@ class UnitResource extends Resource
 
     protected static ?int $navigationSort = 8;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Inventory');

@@ -2,13 +2,17 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class JournalEntryTemplate extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'vendor_id',
         'name',
         'name_ar',

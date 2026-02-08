@@ -66,5 +66,15 @@
     "Upload your company logo": "قم بتحميل شعار شركتك",
     "You do not have an active subscription. Please contact your system administrator to activate a subscription plan for your team.": "ليس لديك اشتراك نشط. يرجى الاتصال بمسؤول النظام لتفعيل خطة اشتراك لفريقك.",
     "Your Company Name": "اسم شركتك",
-    "Your active subscription plan details": "تفاصيل خطة الاشتراك النشطة الخاصة بك"
+    "Your active subscription plan details": "تفاصيل خطة الاشتراك النشطة الخاصة بك",
+    "Branch": "الفرع",
+    "Branches": "الفروع",
+    "Branch Information": "معلومات الفرع",
+    "Default Branch": "الفرع الافتراضي",
+    "All Branches": "جميع الفروع",
+    "Current Branch": "الفرع الحالي",
+    "View Branches": "عرض الفروع",
+    "Create Branches": "إنشاء فروع",
+    "Edit Branches": "تعديل فروع",
+    "Delete Branches": "حذف فروع"
 }

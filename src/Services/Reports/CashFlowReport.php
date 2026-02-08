@@ -5,6 +5,7 @@ namespace Gopos\Services\Reports;
 use Gopos\Models\Account;
 use Gopos\Models\JournalEntryLine;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class CashFlowReport extends BaseReport
 {
@@ -12,10 +13,24 @@ class CashFlowReport extends BaseReport
 
     protected string $endDate;
 
-    public function __construct(string $startDate, string $endDate)
+    protected ?int $branchId = null;
+
+    protected bool $allBranches = false;
+
+    public function __construct(string $startDate = '', string $endDate = '')
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+    }
+
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection|array
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->branchId = $branchId;
+        $this->allBranches = $allBranches;
+
+        return $this->generate();
     }
 
     /**
@@ -59,6 +74,38 @@ class CashFlowReport extends BaseReport
                 'closing_cash' => $closingCash,
             ],
         ];
+    }
+
+    protected function newJournalEntryLineQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = JournalEntryLine::query();
+
+        if ($this->allBranches || $this->branchId) {
+            $query->whereHas('journalEntry', function ($q) {
+                if ($this->allBranches) {
+                    $q->withoutGlobalScope(filament()->getTenancyScopeName());
+                } elseif ($this->branchId) {
+                    $q->withoutGlobalScope(filament()->getTenancyScopeName())
+                        ->where('branch_id', $this->branchId);
+                }
+            });
+        }
+
+        return $query;
+    }
+
+    protected function newAccountQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = Account::query();
+
+        if ($this->allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($this->branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $this->branchId);
+        }
+
+        return $query;
     }
 
     /**
@@ -191,24 +238,24 @@ class CashFlowReport extends BaseReport
      */
     protected function getNetIncome(): float
     {
-        $revenue = JournalEntryLine::whereHas('journalEntry', function ($q) {
+        $revenue = $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account.accountType', function ($q) {
             $q->where('name', 'Revenue');
-        })->sum('credit') - JournalEntryLine::whereHas('journalEntry', function ($q) {
+        })->sum('credit') - $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account.accountType', function ($q) {
             $q->where('name', 'Revenue');
         })->sum('debit');
 
-        $expenses = JournalEntryLine::whereHas('journalEntry', function ($q) {
+        $expenses = $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account.accountType', function ($q) {
             $q->where('name', 'Expense');
-        })->sum('debit') - JournalEntryLine::whereHas('journalEntry', function ($q) {
+        })->sum('debit') - $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account.accountType', function ($q) {
@@ -223,7 +270,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getDepreciationExpense(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {
@@ -260,7 +307,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getAccountBalanceChange(string $accountName): float
     {
-        $account = Account::where('name', 'like', "%{$accountName}%")->first();
+        $account = $this->newAccountQuery()->where('name', 'like', "%{$accountName}%")->first();
         if (! $account) {
             return 0;
         }
@@ -276,7 +323,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getOpeningCashBalance(): float
     {
-        $cashAccounts = Account::where('name', 'like', '%Cash%')
+        $cashAccounts = $this->newAccountQuery()->where('name', 'like', '%Cash%')
             ->orWhere('name', 'like', '%Bank%')
             ->get();
 
@@ -295,7 +342,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getFixedAssetPurchases(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {
@@ -310,7 +357,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getFixedAssetSales(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {
@@ -325,7 +372,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getCapitalContributions(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {
@@ -339,7 +386,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getOwnerDrawings(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {
@@ -352,7 +399,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getLoanProceeds(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {
@@ -366,7 +413,7 @@ class CashFlowReport extends BaseReport
      */
     protected function getLoanRepayments(): float
     {
-        return JournalEntryLine::whereHas('journalEntry', function ($q) {
+        return $this->newJournalEntryLineQuery()->whereHas('journalEntry', function ($q) {
             $q->where('status', 'posted')
                 ->whereBetween('entry_date', [$this->startDate, $this->endDate]);
         })->whereHas('account', function ($q) {

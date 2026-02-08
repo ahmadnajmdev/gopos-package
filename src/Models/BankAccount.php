@@ -3,6 +3,7 @@
 namespace Gopos\Models;
 
 use Gopos\Models\Concerns\Auditable;
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,8 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BankAccount extends Model
 {
     use Auditable;
+    use BelongsToBranch;
 
     protected $fillable = [
+        'branch_id',
         'account_id',
         'bank_name',
         'bank_name_ar',

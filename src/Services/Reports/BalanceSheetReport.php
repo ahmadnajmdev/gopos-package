@@ -18,16 +18,15 @@ class BalanceSheetReport extends BaseReport
         'amount' => ['label' => 'Amount', 'label_ar' => 'المبلغ', 'type' => 'currency'],
     ];
 
-    public function getData(string $startDate, string $endDate): array
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): array
     {
-
         $baseCurrency = Currency::getBaseCurrency();
         $currencySymbol = $baseCurrency?->symbol ?? 'IQD';
 
         // Get all accounts by type
-        $assets = $this->getAccountsByType(1, $endDate); // Asset
-        $liabilities = $this->getAccountsByType(2, $endDate); // Liability
-        $equity = $this->getAccountsByType(3, $endDate); // Equity
+        $assets = $this->getAccountsByType(1, $endDate, $branchId, $allBranches); // Asset
+        $liabilities = $this->getAccountsByType(2, $endDate, $branchId, $allBranches); // Liability
+        $equity = $this->getAccountsByType(3, $endDate, $branchId, $allBranches); // Equity
 
         // Calculate totals
         $totalAssets = collect($assets)->sum('balance');
@@ -35,7 +34,7 @@ class BalanceSheetReport extends BaseReport
         $totalEquity = collect($equity)->sum('balance');
 
         // Calculate net income for the period (Revenue - Expenses)
-        $netIncome = $this->calculateNetIncome($startDate, $endDate);
+        $netIncome = $this->calculateNetIncome($startDate, $endDate, $branchId, $allBranches);
 
         // Total Equity including net income
         $totalEquityWithNetIncome = $totalEquity + $netIncome;
@@ -83,9 +82,18 @@ class BalanceSheetReport extends BaseReport
         ];
     }
 
-    protected function getAccountsByType(int $typeId, string $asOfDate): array
+    protected function getAccountsByType(int $typeId, string $asOfDate, ?int $branchId = null, bool $allBranches = false): array
     {
-        $accounts = Account::where('account_type_id', $typeId)
+        $query = Account::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        $accounts = $query->where('account_type_id', $typeId)
             ->where('is_active', true)
             ->orderBy('code')
             ->get();
@@ -108,10 +116,23 @@ class BalanceSheetReport extends BaseReport
         return $result;
     }
 
-    protected function calculateNetIncome(string $startDate, string $endDate): float
+    protected function calculateNetIncome(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): float
     {
+        $revenueQuery = Account::query();
+        $expenseQuery = Account::query();
+
+        if ($allBranches) {
+            $revenueQuery->withoutGlobalScope(filament()->getTenancyScopeName());
+            $expenseQuery->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $revenueQuery->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+            $expenseQuery->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
         // Revenue accounts (type 4)
-        $revenueAccounts = Account::where('account_type_id', 4)
+        $revenueAccounts = $revenueQuery->where('account_type_id', 4)
             ->where('is_active', true)
             ->get();
 
@@ -121,7 +142,7 @@ class BalanceSheetReport extends BaseReport
         }
 
         // Expense accounts (type 5)
-        $expenseAccounts = Account::where('account_type_id', 5)
+        $expenseAccounts = $expenseQuery->where('account_type_id', 5)
             ->where('is_active', true)
             ->get();
 

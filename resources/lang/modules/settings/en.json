@@ -65,5 +65,15 @@
     "Upload your company logo": "Upload your company logo",
     "You do not have an active subscription. Please contact your system administrator to activate a subscription plan for your team.": "You do not have an active subscription. Please contact your system administrator to activate a subscription plan for your team.",
     "Your Company Name": "Your Company Name",
-    "Your active subscription plan details": "Your active subscription plan details"
+    "Your active subscription plan details": "Your active subscription plan details",
+    "Branch": "Branch",
+    "Branches": "Branches",
+    "Branch Information": "Branch Information",
+    "Default Branch": "Default Branch",
+    "All Branches": "All Branches",
+    "Current Branch": "Current Branch",
+    "View Branches": "View Branches",
+    "Create Branches": "Create Branches",
+    "Edit Branches": "Edit Branches",
+    "Delete Branches": "Delete Branches"
 }

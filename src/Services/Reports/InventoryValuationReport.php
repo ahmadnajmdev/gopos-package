@@ -23,13 +23,22 @@ class InventoryValuationReport extends BaseReport
 
     protected array $totalColumns = ['quantity', 'total_value'];
 
-    public function getData(string $startDate, string $endDate): Collection
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection
     {
         $baseCurrency = Currency::getBaseCurrency();
         $decimalPlaces = $baseCurrency?->decimal_places ?? 2;
         $currency = $baseCurrency?->symbol ?? $baseCurrency?->code;
 
-        return Product::query()
+        $query = Product::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        return $query
             ->with(['category', 'movements', 'unit'])
             ->get()
             ->map(function ($product) use ($currency, $decimalPlaces) {

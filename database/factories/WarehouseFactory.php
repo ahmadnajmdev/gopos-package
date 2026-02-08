@@ -15,6 +15,7 @@ class WarehouseFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'name' => $this->faker->company().' Warehouse',
             'name_ar' => null,
             'name_ckb' => null,

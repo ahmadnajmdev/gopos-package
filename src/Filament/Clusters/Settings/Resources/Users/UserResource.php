@@ -45,6 +45,8 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 14;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Settings');
@@ -89,6 +91,15 @@ class UserResource extends Resource
                             ->searchable()
                             ->bulkToggleable()
                             ->getOptionLabelFromRecordUsing(fn (Role $record) => $record->localizedName),
+                    ]),
+                Section::make(__('Branches'))
+                    ->schema([
+                        CheckboxList::make('branches')
+                            ->label('')
+                            ->relationship('branches', 'name')
+                            ->columns(3)
+                            ->searchable()
+                            ->bulkToggleable(),
                     ]),
             ]);
     }

@@ -22,6 +22,7 @@ class LeaveFactory extends Factory
         $endDate = (clone $startDate)->modify("+{$days} days");
 
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'employee_id' => Employee::factory(),
             'leave_type_id' => LeaveType::factory(),
             'start_date' => $startDate,

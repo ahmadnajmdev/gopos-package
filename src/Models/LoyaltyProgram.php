@@ -2,12 +2,16 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LoyaltyProgram extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'name',
         'name_ar',
         'name_ckb',

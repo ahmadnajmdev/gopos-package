@@ -89,6 +89,12 @@ class PermissionService
                 'reports.financial' => 'Financial Reports',
                 'reports.export' => 'Export Reports',
             ],
+            'branches' => [
+                'branches.view' => 'View Branches',
+                'branches.create' => 'Create Branches',
+                'branches.edit' => 'Edit Branches',
+                'branches.delete' => 'Delete Branches',
+            ],
             'settings' => [
                 'settings.view' => 'View Settings',
                 'settings.manage' => 'Manage Settings',
@@ -169,6 +175,11 @@ class PermissionService
             'reports.inventory' => 'تقارير المخزون',
             'reports.financial' => 'التقارير المالية',
             'reports.export' => 'تصدير التقارير',
+            // Branches
+            'branches.view' => 'عرض الفروع',
+            'branches.create' => 'إنشاء فروع',
+            'branches.edit' => 'تعديل فروع',
+            'branches.delete' => 'حذف فروع',
             // Settings
             'settings.view' => 'عرض الإعدادات',
             'settings.manage' => 'إدارة الإعدادات',
@@ -248,6 +259,11 @@ class PermissionService
             'reports.inventory' => 'ڕاپۆرتی بڕ',
             'reports.financial' => 'ڕاپۆرتی دارایی',
             'reports.export' => 'هەناردەکردنی ڕاپۆرت',
+            // Branches
+            'branches.view' => 'بینینی لقەکان',
+            'branches.create' => 'دروستکردنی لق',
+            'branches.edit' => 'دەستکاریکردنی لق',
+            'branches.delete' => 'سڕینەوەی لق',
             // Settings
             'settings.view' => 'بینینی ڕێکخستنەکان',
             'settings.manage' => 'بەڕێوەبردنی ڕێکخستنەکان',
@@ -289,6 +305,7 @@ class PermissionService
                     'accounting.view_reports',
                     'reports.*',
                     'settings.view',
+                    'branches.view',
                 ],
             ],
             'accountant' => [

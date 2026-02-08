@@ -2,13 +2,17 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductSerial extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'product_id',
         'warehouse_id',
         'batch_id',

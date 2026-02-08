@@ -20,9 +20,18 @@ class StockMovementReport extends BaseReport
         'notes' => ['label' => 'Notes', 'type' => 'text'],
     ];
 
-    public function getData(string $startDate, string $endDate): Collection
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection
     {
-        return InventoryMovement::query()
+        $query = InventoryMovement::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        return $query
             ->with(['product', 'product.unit'])
             ->whereBetween('created_at', [$startDate, $endDate])
             ->orderBy('created_at', 'desc')

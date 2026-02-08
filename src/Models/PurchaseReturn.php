@@ -2,13 +2,17 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseReturn extends Model
 {
+    use BelongsToBranch;
+
     protected $fillable = [
+        'branch_id',
         'purchase_id',
         'currency_id',
         'exchange_rate',
@@ -57,9 +61,18 @@ class PurchaseReturn extends Model
 
     public static function generatePurchaseReturnNumber(): string
     {
-        $last = self::latest()->first();
+        $branchCode = filament()->getTenant()?->code ?? 'MAIN';
+        $prefix = $branchCode.'-PR-';
+        $prefixLength = strlen($prefix);
 
-        return $last ? 'PR-'.str_pad($last->id + 1, 5, '0', STR_PAD_LEFT) : 'PR-00001';
+        $lastNumber = static::query()
+            ->where('purchase_return_number', 'like', $prefix.'%')
+            ->selectRaw('MAX(CAST(SUBSTRING(purchase_return_number, ?) AS UNSIGNED)) as max_num', [$prefixLength + 1])
+            ->value('max_num');
+
+        $nextNumber = ($lastNumber ?? 0) + 1;
+
+        return $prefix.str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 
     public function purchase(): BelongsTo

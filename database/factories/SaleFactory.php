@@ -18,6 +18,7 @@ class SaleFactory extends Factory
         $subTotal = $this->faker->randomFloat(2, 50, 1000);
 
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'sale_number' => 'INV-'.$this->faker->unique()->numerify('####'),
             'sale_date' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'currency_id' => Currency::factory(),

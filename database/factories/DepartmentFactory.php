@@ -15,6 +15,7 @@ class DepartmentFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'name' => $this->faker->unique()->words(2, true),
             'is_active' => true,
         ];

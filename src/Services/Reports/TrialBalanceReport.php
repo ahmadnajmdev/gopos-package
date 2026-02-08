@@ -20,13 +20,21 @@ class TrialBalanceReport extends BaseReport
         'credit' => ['label' => 'Credit', 'label_ar' => 'دائن', 'type' => 'currency'],
     ];
 
-    public function getData(string $startDate, string $endDate): array
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): array
     {
-
         $baseCurrency = Currency::getBaseCurrency();
         $currencySymbol = $baseCurrency?->symbol ?? 'IQD';
 
-        $accounts = Account::where('is_active', true)
+        $query = Account::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        $accounts = $query->where('is_active', true)
             ->with('accountType')
             ->orderBy('code')
             ->get();

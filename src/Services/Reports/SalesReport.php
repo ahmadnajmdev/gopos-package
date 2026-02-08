@@ -25,9 +25,18 @@ class SalesReport extends BaseReport
 
     protected array $totalColumns = ['sub_total', 'discount_amount', 'total_amount', 'paid_amount', 'balance_due'];
 
-    public function getData(string $startDate, string $endDate): Collection
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection
     {
-        return Sale::query()
+        $query = Sale::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        return $query
             ->whereBetween('sale_date', [$startDate, $endDate])
             ->with(['customer', 'currency'])
             ->orderBy('sale_date', 'desc')

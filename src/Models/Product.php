@@ -2,6 +2,7 @@
 
 namespace Gopos\Models;
 
+use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Storage;
 
 class Product extends Model
 {
+    use BelongsToBranch;
     use HasFactory;
 
     protected $casts = [

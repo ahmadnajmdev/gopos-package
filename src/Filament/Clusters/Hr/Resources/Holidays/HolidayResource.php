@@ -36,6 +36,8 @@ class HolidayResource extends Resource
 
     protected static ?int $navigationSort = 7;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Leave Management');

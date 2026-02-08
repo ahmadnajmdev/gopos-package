@@ -22,6 +22,7 @@ class PayrollFactory extends Factory
         $overtimePay = $this->faker->numberBetween(0, 300);
 
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'employee_id' => Employee::factory(),
             'pay_period_start' => now()->startOfMonth(),
             'pay_period_end' => now()->endOfMonth(),

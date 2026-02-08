@@ -29,12 +29,21 @@ class SaleByProductReport extends BaseReport
         'total_profit',
     ];
 
-    public function getData(string $startDate, string $endDate): Collection|array
+    public function getData(string $startDate, string $endDate, ?int $branchId = null, bool $allBranches = false): Collection|array
     {
         $baseCurrency = Currency::getBaseCurrency();
         $currency = $baseCurrency?->symbol ?? $baseCurrency?->code;
 
-        $products = Product::query()->with(['saleItems' => function ($query) use ($startDate, $endDate) {
+        $query = Product::query();
+
+        if ($allBranches) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName());
+        } elseif ($branchId) {
+            $query->withoutGlobalScope(filament()->getTenancyScopeName())
+                ->where('branch_id', $branchId);
+        }
+
+        $products = $query->with(['saleItems' => function ($query) use ($startDate, $endDate) {
             $query->whereHas('sale', function ($saleQuery) use ($startDate, $endDate) {
                 $saleQuery->whereBetween('sale_date', [$startDate, $endDate]);
             });

@@ -382,7 +382,7 @@ class PosShiftManagement extends Page implements HasForms, HasTable
                 TableAction::make('view_report')
                     ->label(__('View Report'))
                     ->icon('heroicon-o-document-text')
-                    ->url(fn (PosSession $record) => route('filament.admin.pages.pos-shift-report', ['session' => $record->id]))
+                    ->url(fn (PosSession $record) => PosShiftReport::getUrl(['sessionId' => $record->id]))
                     ->visible(fn (PosSession $record) => $record->status === 'closed'),
             ])
             ->defaultSort('opening_time', 'desc')

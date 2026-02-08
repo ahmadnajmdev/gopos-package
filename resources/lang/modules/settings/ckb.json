@@ -66,5 +66,15 @@
     "Upload your company logo": "لۆگۆی کۆمپانیاکەت باربکە",
     "You do not have an active subscription. Please contact your system administrator to activate a subscription plan for your team.": "تۆ بەشدارییەکی چالاکت نییە. تکایە پەیوەندی بە بەڕێوەبەری سیستەمەکەتەوە بکە بۆ چالاککردنی پلانی بەشداری بۆ تیمەکەت.",
     "Your Company Name": "ناوی کۆمپانیاکەت",
-    "Your active subscription plan details": "وردەکارییەکانی پلانی بەشداری چالاکت"
+    "Your active subscription plan details": "وردەکارییەکانی پلانی بەشداری چالاکت",
+    "Branch": "لق",
+    "Branches": "لقەکان",
+    "Branch Information": "زانیاری لق",
+    "Default Branch": "لقی بنەڕەت",
+    "All Branches": "هەموو لقەکان",
+    "Current Branch": "لقی ئێستا",
+    "View Branches": "بینینی لقەکان",
+    "Create Branches": "دروستکردنی لق",
+    "Edit Branches": "دەستکاریکردنی لق",
+    "Delete Branches": "سڕینەوەی لق"
 }

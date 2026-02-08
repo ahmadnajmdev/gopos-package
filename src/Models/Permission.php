@@ -107,6 +107,7 @@ class Permission extends Model
             'accounting' => __('Accounting'),
             'hr' => __('HR'),
             'reports' => __('Reports'),
+            'branches' => __('Branches'),
             'settings' => __('Settings'),
         ];
     }

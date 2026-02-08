@@ -17,6 +17,7 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         return [
+            'branch_id' => \Gopos\Models\Branch::factory(),
             'employee_number' => 'EMP-'.$this->faker->unique()->numerify('####'),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
