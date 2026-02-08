@@ -73,47 +73,10 @@ class PermissionService
                 'accounting.manage_accounts' => 'Manage Chart of Accounts',
                 'accounting.bank_reconciliation' => 'Bank Reconciliation',
             ],
-            'hr' => [
-                // Employees
-                'hr.view_employees' => 'View Employees',
-                'hr.create_employees' => 'Create Employees',
-                'hr.edit_employees' => 'Edit Employees',
-                'hr.delete_employees' => 'Delete Employees',
-                'hr.terminate_employees' => 'Terminate Employees',
-                // Departments & Positions
-                'hr.manage_departments' => 'Manage Departments',
-                'hr.manage_positions' => 'Manage Positions',
-                // Attendance
-                'hr.view_attendance' => 'View Attendance',
-                'hr.manage_attendance' => 'Manage Attendance',
-                'hr.clock_in_out' => 'Clock In/Out',
-                'hr.manage_schedules' => 'Manage Work Schedules',
-                'hr.approve_overtime' => 'Approve Overtime',
-                // Leave
-                'hr.view_leave' => 'View Leave Requests',
-                'hr.manage_leave' => 'Manage Leave',
-                'hr.approve_leave' => 'Approve Leave Requests',
-                'hr.manage_leave_types' => 'Manage Leave Types',
-                // Payroll
-                'hr.view_payroll' => 'View Payroll',
-                'hr.process_payroll' => 'Process Payroll',
-                'hr.approve_payroll' => 'Approve Payroll',
-                'hr.manage_components' => 'Manage Payroll Components',
-                'hr.view_payslips' => 'View Payslips',
-                // Loans
-                'hr.view_loans' => 'View Employee Loans',
-                'hr.manage_loans' => 'Manage Employee Loans',
-                'hr.approve_loans' => 'Approve Loans',
-                // Reports
-                'hr.view_reports' => 'View HR Reports',
-                // Holidays
-                'hr.manage_holidays' => 'Manage Holidays',
-            ],
             'reports' => [
                 'reports.sales' => 'Sales Reports',
                 'reports.inventory' => 'Inventory Reports',
                 'reports.financial' => 'Financial Reports',
-                'reports.hr' => 'HR Reports',
                 'reports.export' => 'Export Reports',
             ],
             'settings' => [
@@ -182,44 +145,10 @@ class PermissionService
             'accounting.close_period' => 'إغلاق الفترات المالية',
             'accounting.manage_accounts' => 'إدارة شجرة الحسابات',
             'accounting.bank_reconciliation' => 'تسوية البنوك',
-            // HR - Employees
-            'hr.view_employees' => 'عرض الموظفين',
-            'hr.create_employees' => 'إنشاء الموظفين',
-            'hr.edit_employees' => 'تعديل الموظفين',
-            'hr.delete_employees' => 'حذف الموظفين',
-            'hr.terminate_employees' => 'إنهاء خدمة الموظفين',
-            // HR - Departments & Positions
-            'hr.manage_departments' => 'إدارة الأقسام',
-            'hr.manage_positions' => 'إدارة المناصب',
-            // HR - Attendance
-            'hr.view_attendance' => 'عرض الحضور',
-            'hr.manage_attendance' => 'إدارة الحضور',
-            'hr.clock_in_out' => 'تسجيل الدخول/الخروج',
-            'hr.manage_schedules' => 'إدارة جداول العمل',
-            'hr.approve_overtime' => 'الموافقة على العمل الإضافي',
-            // HR - Leave
-            'hr.view_leave' => 'عرض طلبات الإجازة',
-            'hr.manage_leave' => 'إدارة الإجازات',
-            'hr.approve_leave' => 'الموافقة على الإجازات',
-            'hr.manage_leave_types' => 'إدارة أنواع الإجازات',
-            // HR - Payroll
-            'hr.view_payroll' => 'عرض الرواتب',
-            'hr.process_payroll' => 'معالجة الرواتب',
-            'hr.approve_payroll' => 'الموافقة على الرواتب',
-            'hr.manage_components' => 'إدارة مكونات الرواتب',
-            'hr.view_payslips' => 'عرض كشوف الرواتب',
-            // HR - Loans
-            'hr.view_loans' => 'عرض قروض الموظفين',
-            'hr.manage_loans' => 'إدارة قروض الموظفين',
-            'hr.approve_loans' => 'الموافقة على القروض',
-            // HR - Reports & Holidays
-            'hr.view_reports' => 'عرض تقارير الموارد البشرية',
-            'hr.manage_holidays' => 'إدارة العطلات',
             // Reports
             'reports.sales' => 'تقارير المبيعات',
             'reports.inventory' => 'تقارير المخزون',
             'reports.financial' => 'التقارير المالية',
-            'reports.hr' => 'تقارير الموارد البشرية',
             'reports.export' => 'تصدير التقارير',
             // Settings
             'settings.view' => 'عرض الإعدادات',
@@ -286,44 +215,10 @@ class PermissionService
             'accounting.close_period' => 'داخستنی ماوەی دارایی',
             'accounting.manage_accounts' => 'بەڕێوەبردنی ڕووکاری هەژمارەکان',
             'accounting.bank_reconciliation' => 'ڕێکخستنی بانک',
-            // HR - Employees
-            'hr.view_employees' => 'بینینی کارمەندەکان',
-            'hr.create_employees' => 'دروستکردنی کارمەند',
-            'hr.edit_employees' => 'دەستکاریکردنی کارمەند',
-            'hr.delete_employees' => 'سڕینەوەی کارمەند',
-            'hr.terminate_employees' => 'کۆتایی هێنان بە خزمەت',
-            // HR - Departments & Positions
-            'hr.manage_departments' => 'بەڕێوەبردنی بەشەکان',
-            'hr.manage_positions' => 'بەڕێوەبردنی پۆستەکان',
-            // HR - Attendance
-            'hr.view_attendance' => 'بینینی ئامادەبوون',
-            'hr.manage_attendance' => 'بەڕێوەبردنی ئامادەبوون',
-            'hr.clock_in_out' => 'تۆمارکردنی هاتن/ڕۆیشتن',
-            'hr.manage_schedules' => 'بەڕێوەبردنی خشتەی کار',
-            'hr.approve_overtime' => 'پەسەندکردنی کاری زیادە',
-            // HR - Leave
-            'hr.view_leave' => 'بینینی داواکاریەکانی مۆڵەت',
-            'hr.manage_leave' => 'بەڕێوەبردنی مۆڵەت',
-            'hr.approve_leave' => 'پەسەندکردنی مۆڵەت',
-            'hr.manage_leave_types' => 'بەڕێوەبردنی جۆرەکانی مۆڵەت',
-            // HR - Payroll
-            'hr.view_payroll' => 'بینینی مووچەکان',
-            'hr.process_payroll' => 'جێبەجێکردنی مووچە',
-            'hr.approve_payroll' => 'پەسەندکردنی مووچە',
-            'hr.manage_components' => 'بەڕێوەبردنی پێکهاتەکانی مووچە',
-            'hr.view_payslips' => 'بینینی پسوولەی مووچە',
-            // HR - Loans
-            'hr.view_loans' => 'بینینی قەرزەکانی کارمەندان',
-            'hr.manage_loans' => 'بەڕێوەبردنی قەرزەکانی کارمەندان',
-            'hr.approve_loans' => 'پەسەندکردنی قەرز',
-            // HR - Reports & Holidays
-            'hr.view_reports' => 'بینینی ڕاپۆرتەکانی کەسایەتی',
-            'hr.manage_holidays' => 'بەڕێوەبردنی پشووەکان',
             // Reports
             'reports.sales' => 'ڕاپۆرتی فرۆشتن',
             'reports.inventory' => 'ڕاپۆرتی کۆگا',
             'reports.financial' => 'ڕاپۆرتی دارایی',
-            'reports.hr' => 'ڕاپۆرتی HR',
             'reports.export' => 'هەناردەکردنی ڕاپۆرت',
             // Settings
             'settings.view' => 'بینینی ڕێکخستنەکان',
@@ -364,14 +259,6 @@ class PermissionService
                     'suppliers.*',
                     'accounting.view',
                     'accounting.view_reports',
-                    // HR view permissions
-                    'hr.view_employees',
-                    'hr.view_attendance',
-                    'hr.view_leave',
-                    'hr.view_payroll',
-                    'hr.view_payslips',
-                    'hr.view_loans',
-                    'hr.view_reports',
                     'reports.*',
                     'settings.view',
                 ],
@@ -422,40 +309,6 @@ class PermissionService
                     'inventory.transfer',
                     'purchases.view',
                     'purchases.create',
-                ],
-            ],
-            'hr_manager' => [
-                'name_ar' => 'مدير الموارد البشرية',
-                'name_ckb' => 'بەڕێوەبەری کەسایەتی',
-                'description' => 'Full HR access',
-                'description_ar' => 'وصول كامل للموارد البشرية',
-                'description_ckb' => 'دەستگەیشتنی تەواو بە کەسایەتی',
-                'is_system' => true,
-                'permissions' => [
-                    'hr.*',
-                    'reports.hr',
-                    'reports.export',
-                ],
-            ],
-            'hr_staff' => [
-                'name_ar' => 'موظف موارد بشرية',
-                'name_ckb' => 'کارمەندی کەسایەتی',
-                'description' => 'Limited HR access',
-                'description_ar' => 'وصول محدود للموارد البشرية',
-                'description_ckb' => 'دەستگەیشتنی سنووردار بە کەسایەتی',
-                'is_system' => true,
-                'permissions' => [
-                    // Employee viewing
-                    'hr.view_employees',
-                    // Attendance
-                    'hr.view_attendance',
-                    'hr.manage_attendance',
-                    'hr.clock_in_out',
-                    // Leave
-                    'hr.view_leave',
-                    'hr.manage_leave',
-                    // Payroll (view only)
-                    'hr.view_payslips',
                 ],
             ],
         ];

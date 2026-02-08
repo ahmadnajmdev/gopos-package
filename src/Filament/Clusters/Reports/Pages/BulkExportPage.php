@@ -13,19 +13,13 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Gopos\Filament\Clusters\Reports\ReportsCluster;
-use Gopos\Services\Reports\AttendanceReport;
 use Gopos\Services\Reports\BalanceSheetReport;
 use Gopos\Services\Reports\BulkReportExporter;
 use Gopos\Services\Reports\CashFlowReport;
 use Gopos\Services\Reports\CustomerBalancesReport;
-use Gopos\Services\Reports\EmployeeHeadcountReport;
 use Gopos\Services\Reports\FinancialReport;
 use Gopos\Services\Reports\IncomeStatementReport;
 use Gopos\Services\Reports\InventoryValuationReport;
-use Gopos\Services\Reports\LeaveReport;
-use Gopos\Services\Reports\LoanReport;
-use Gopos\Services\Reports\OvertimeReport;
-use Gopos\Services\Reports\PayrollSummaryReport;
 use Gopos\Services\Reports\PurchasesReport;
 use Gopos\Services\Reports\SaleByProductReport;
 use Gopos\Services\Reports\SalesReport;
@@ -147,12 +141,6 @@ class BulkExportPage extends Page implements HasForms
             TrialBalanceReport::class => __('Trial Balance'),
             FinancialReport::class => __('Financial Report'),
             CashFlowReport::class => __('Cash Flow Report'),
-            AttendanceReport::class => __('Attendance Report'),
-            LeaveReport::class => __('Leave Report'),
-            PayrollSummaryReport::class => __('Payroll Summary Report'),
-            EmployeeHeadcountReport::class => __('Employee Headcount Report'),
-            OvertimeReport::class => __('Overtime Report'),
-            LoanReport::class => __('Loan Report'),
         ];
     }
 

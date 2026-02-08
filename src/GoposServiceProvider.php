@@ -8,20 +8,15 @@ use Gopos\Console\Commands\MakeReportPage;
 use Gopos\Console\Commands\Refresh;
 use Gopos\Console\Commands\SeedDemoDataCommand;
 use Gopos\Console\Commands\SendTestEmail;
-use Gopos\Events\LeaveApproved;
-use Gopos\Events\PayrollApproved;
 use Gopos\Events\SaleCreated;
 use Gopos\Events\SaleReturnCreated;
 use Gopos\Events\StockCountPosted;
 use Gopos\Events\StockTransferCompleted;
-use Gopos\Listeners\PostPayrollToGL;
 use Gopos\Listeners\PostSaleToGL;
 use Gopos\Listeners\PostStockCountAdjustments;
 use Gopos\Listeners\ProcessSaleReturn;
 use Gopos\Listeners\ProcessStockTransfer;
-use Gopos\Listeners\SendPayslipNotification;
 use Gopos\Listeners\UpdateInventoryOnSale;
-use Gopos\Listeners\UpdateLeaveBalance;
 use Gopos\Models\Expense;
 use Gopos\Models\Income;
 use Gopos\Models\Payment;
@@ -109,8 +104,6 @@ class GoposServiceProvider extends ServiceProvider
                 __DIR__.'/../database/seeders' => database_path('seeders'),
             ], 'gopos-seeders');
 
-              
-
             $this->publishes([
                 __DIR__.'/../docs' => base_path('docs'),
             ], 'gopos-docs');
@@ -130,8 +123,6 @@ class GoposServiceProvider extends ServiceProvider
     {
         Event::listen(SaleCreated::class, [UpdateInventoryOnSale::class, PostSaleToGL::class]);
         Event::listen(SaleReturnCreated::class, [ProcessSaleReturn::class]);
-        Event::listen(PayrollApproved::class, [PostPayrollToGL::class, SendPayslipNotification::class]);
-        Event::listen(LeaveApproved::class, [UpdateLeaveBalance::class]);
         Event::listen(StockTransferCompleted::class, [ProcessStockTransfer::class]);
         Event::listen(StockCountPosted::class, [PostStockCountAdjustments::class]);
     }
@@ -161,17 +152,6 @@ class GoposServiceProvider extends ServiceProvider
             \Gopos\Models\TaxCode::class => \Gopos\Policies\TaxCodePolicy::class,
             \Gopos\Models\Currency::class => \Gopos\Policies\CurrencyPolicy::class,
             \Gopos\Models\AuditLog::class => \Gopos\Policies\AuditLogPolicy::class,
-            \Gopos\Models\Employee::class => \Gopos\Policies\EmployeePolicy::class,
-            \Gopos\Models\Department::class => \Gopos\Policies\DepartmentPolicy::class,
-            \Gopos\Models\Position::class => \Gopos\Policies\PositionPolicy::class,
-            \Gopos\Models\Attendance::class => \Gopos\Policies\AttendancePolicy::class,
-            \Gopos\Models\LeaveType::class => \Gopos\Policies\LeaveTypePolicy::class,
-            \Gopos\Models\LeaveRequest::class => \Gopos\Policies\LeaveRequestPolicy::class,
-            \Gopos\Models\PayrollPeriod::class => \Gopos\Policies\PayrollPeriodPolicy::class,
-            \Gopos\Models\PayrollComponent::class => \Gopos\Policies\PayrollComponentPolicy::class,
-            \Gopos\Models\EmployeeLoan::class => \Gopos\Policies\EmployeeLoanPolicy::class,
-            \Gopos\Models\WorkSchedule::class => \Gopos\Policies\WorkSchedulePolicy::class,
-            \Gopos\Models\Holiday::class => \Gopos\Policies\HolidayPolicy::class,
             \Gopos\Models\User::class => \Gopos\Policies\UserPolicy::class,
             \Gopos\Models\Role::class => \Gopos\Policies\RolePolicy::class,
             \Gopos\Models\Permission::class => \Gopos\Policies\PermissionPolicy::class,
