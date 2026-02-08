@@ -11,6 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('departments')) {
+            Schema::table('departments', function (Blueprint $table) {
+                if (! Schema::hasColumn('departments', 'name_ar')) {
+                    $table->string('name_ar')->nullable()->after('name');
+                }
+                if (! Schema::hasColumn('departments', 'name_ckb')) {
+                    $table->string('name_ckb')->nullable()->after('name_ar');
+                }
+                if (! Schema::hasColumn('departments', 'parent_id')) {
+                    $table->foreignId('parent_id')->nullable()->after('name_ckb')->constrained('departments')->cascadeOnDelete();
+                }
+                if (! Schema::hasColumn('departments', 'description')) {
+                    $table->text('description')->nullable()->after('parent_id');
+                }
+                if (! Schema::hasColumn('departments', 'is_active')) {
+                    $table->boolean('is_active')->default(true)->after('description');
+                }
+            });
+
+            return;
+        }
+
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
