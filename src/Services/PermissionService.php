@@ -73,6 +73,16 @@ class PermissionService
                 'accounting.manage_accounts' => 'Manage Chart of Accounts',
                 'accounting.bank_reconciliation' => 'Bank Reconciliation',
             ],
+            'hr' => [
+                'hr.view' => 'View HR',
+                'hr.create' => 'Create HR Records',
+                'hr.edit' => 'Edit HR Records',
+                'hr.delete' => 'Delete HR Records',
+                'hr.approve_leave' => 'Approve Leave Requests',
+                'hr.view_payroll' => 'View Payroll',
+                'hr.manage_payroll' => 'Manage Payroll',
+                'hr.view_reports' => 'View HR Reports',
+            ],
             'reports' => [
                 'reports.sales' => 'Sales Reports',
                 'reports.inventory' => 'Inventory Reports',
@@ -145,6 +155,15 @@ class PermissionService
             'accounting.close_period' => 'إغلاق الفترات المالية',
             'accounting.manage_accounts' => 'إدارة شجرة الحسابات',
             'accounting.bank_reconciliation' => 'تسوية البنوك',
+            // HR
+            'hr.view' => 'عرض الموارد البشرية',
+            'hr.create' => 'إنشاء سجلات الموارد البشرية',
+            'hr.edit' => 'تعديل سجلات الموارد البشرية',
+            'hr.delete' => 'حذف سجلات الموارد البشرية',
+            'hr.approve_leave' => 'الموافقة على طلبات الإجازة',
+            'hr.view_payroll' => 'عرض الرواتب',
+            'hr.manage_payroll' => 'إدارة الرواتب',
+            'hr.view_reports' => 'عرض تقارير الموارد البشرية',
             // Reports
             'reports.sales' => 'تقارير المبيعات',
             'reports.inventory' => 'تقارير المخزون',
@@ -174,12 +193,12 @@ class PermissionService
             'pos.process_refund' => 'گەڕاندنەوەی پارە',
             'pos.hold_sale' => 'ڕاگرتن/بەردەوامکردنی فرۆشتن',
             // Inventory
-            'inventory.view' => 'بینینی کۆگا',
+            'inventory.view' => 'بینینی بڕ',
             'inventory.create' => 'دروستکردنی بەرهەم',
             'inventory.edit' => 'دەستکاریکردنی بەرهەم',
             'inventory.delete' => 'سڕینەوەی بەرهەم',
-            'inventory.adjust_stock' => 'ڕێکخستنی کۆگا',
-            'inventory.transfer' => 'گواستنەوەی کۆگا',
+            'inventory.adjust_stock' => 'ڕێکخستنی بڕ',
+            'inventory.transfer' => 'گواستنەوەی بڕ',
             'inventory.view_cost' => 'بینینی نرخی تێچوو',
             'inventory.manage_warehouses' => 'بەڕێوەبردنی کۆگاکان',
             // Sales
@@ -215,9 +234,18 @@ class PermissionService
             'accounting.close_period' => 'داخستنی ماوەی دارایی',
             'accounting.manage_accounts' => 'بەڕێوەبردنی ڕووکاری هەژمارەکان',
             'accounting.bank_reconciliation' => 'ڕێکخستنی بانک',
+            // HR
+            'hr.view' => 'بینینی سەرچاوەکانی مرۆڤی',
+            'hr.create' => 'دروستکردنی تۆماری سەرچاوەکانی مرۆڤی',
+            'hr.edit' => 'دەستکاریکردنی تۆماری سەرچاوەکانی مرۆڤی',
+            'hr.delete' => 'سڕینەوەی تۆماری سەرچاوەکانی مرۆڤی',
+            'hr.approve_leave' => 'پەسەندکردنی داواکاری مۆڵەت',
+            'hr.view_payroll' => 'بینینی مووچە',
+            'hr.manage_payroll' => 'بەڕێوەبردنی مووچە',
+            'hr.view_reports' => 'بینینی ڕاپۆرتی سەرچاوەکانی مرۆڤی',
             // Reports
             'reports.sales' => 'ڕاپۆرتی فرۆشتن',
-            'reports.inventory' => 'ڕاپۆرتی کۆگا',
+            'reports.inventory' => 'ڕاپۆرتی بڕ',
             'reports.financial' => 'ڕاپۆرتی دارایی',
             'reports.export' => 'هەناردەکردنی ڕاپۆرت',
             // Settings
@@ -248,7 +276,7 @@ class PermissionService
                 'name_ckb' => 'بەڕێوەبەر',
                 'description' => 'Manager with access to POS, inventory, and reports',
                 'description_ar' => 'مدير مع وصول لنقطة البيع والمخزون والتقارير',
-                'description_ckb' => 'بەڕێوەبەر لەگەڵ دەستگەیشتن بە سندوقی فرۆشتن و کۆگا و ڕاپۆرتەکان',
+                'description_ckb' => 'بەڕێوەبەر لەگەڵ دەستگەیشتن بە سندوقی فرۆشتن و بڕ و ڕاپۆرتەکان',
                 'is_system' => true,
                 'permissions' => [
                     'pos.*',

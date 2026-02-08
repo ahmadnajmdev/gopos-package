@@ -172,10 +172,10 @@ class InstallationService
             'inventory' => [
                 'name' => 'Inventory Module',
                 'name_ar' => 'المخزون',
-                'name_ckb' => 'کۆگا',
+                'name_ckb' => 'بڕ',
                 'description' => 'Stock management, warehouses, transfers',
                 'description_ar' => 'إدارة المخزون والمستودعات والتحويلات',
-                'description_ckb' => 'بەڕێوەبردنی کۆگا، مەخزەنەکان، گواستنەوەکان',
+                'description_ckb' => 'بەڕێوەبردنی بڕ، کۆگاکان، گواستنەوەکان',
                 'icon' => 'heroicon-o-cube',
                 'default' => true,
             ],

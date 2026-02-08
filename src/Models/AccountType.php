@@ -15,6 +15,7 @@ class AccountType extends Model
     protected $fillable = [
         'name',
         'name_ar',
+        'name_ckb',
         'normal_balance',
         'display_order',
     ];
@@ -28,6 +29,10 @@ class AccountType extends Model
 
         if ($locale === 'ar' && ! empty($this->name_ar)) {
             return $this->name_ar;
+        }
+
+        if ($locale === 'ckb' && ! empty($this->name_ckb)) {
+            return $this->name_ckb;
         }
 
         return $this->name;

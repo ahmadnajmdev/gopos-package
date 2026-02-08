@@ -219,5 +219,11 @@
     "Created By": "أنشئ بواسطة",
     "Status": "الحالة",
     "Failed to post journal entry. Ensure debits equal credits.": "فشل ترحيل قيد اليومية. تأكد من أن المدين يساوي الدائن.",
-    "Some entries cannot be deleted.": "لا يمكن حذف بعض القيود."
+    "Some entries cannot be deleted.": "لا يمكن حذف بعض القيود.",
+    "USD Exchange Rate": "سعر صرف الدولار",
+    "Exchange rate updated": "تم تحديث سعر الصرف",
+    "Invalid amount": "مبلغ غير صالح",
+    "USD currency not found": "عملة الدولار غير موجودة",
+    "IQD": "د.ع",
+    "Save": "حفظ"
 }

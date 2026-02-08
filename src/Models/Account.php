@@ -18,6 +18,7 @@ class Account extends Model
         'code',
         'name',
         'name_ar',
+        'name_ckb',
         'description',
         'is_active',
         'is_system',
@@ -124,6 +125,10 @@ class Account extends Model
 
         if ($locale === 'ar' && ! empty($this->name_ar)) {
             return $this->name_ar;
+        }
+
+        if ($locale === 'ckb' && ! empty($this->name_ckb)) {
+            return $this->name_ckb;
         }
 
         return $this->name;

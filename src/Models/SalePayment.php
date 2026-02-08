@@ -23,7 +23,7 @@ class SalePayment extends Model
 
     protected $casts = [
         'amount' => 'decimal:2',
-        'exchange_rate' => 'decimal:6',
+        'exchange_rate' => 'decimal:12',
         'amount_in_base_currency' => 'decimal:2',
         'tendered_amount' => 'decimal:2',
         'change_amount' => 'decimal:2',

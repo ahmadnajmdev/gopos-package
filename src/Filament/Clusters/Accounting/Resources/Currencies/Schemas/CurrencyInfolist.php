@@ -16,7 +16,7 @@ class CurrencyInfolist
                 TextEntry::make('symbol'),
                 TextEntry::make('code'),
                 TextEntry::make('exchange_rate')
-                    ->numeric(),
+                    ->formatStateUsing(fn ($state) => rtrim(rtrim(number_format($state, 12), '0'), '.')),
                 TextEntry::make('decimal_places')
                     ->numeric(),
                 IconEntry::make('base')

@@ -58,12 +58,12 @@ class CurrencyForm
                             ->schema([
                                 TextInput::make('exchange_rate')
                                     ->label(__('Exchange Rate'))
-                                    ->placeholder('1.000000000')
+                                    ->placeholder('1.000000000000')
                                     ->required()
                                     ->numeric()
-                                    ->step(0.0000001)
-                                    ->minValue(0.0000001)
-                                    ->helperText(__('Rate relative to base currency (1.00 = base currency). Supports up to 9 decimal places.')),
+                                    ->step(0.000000000001)
+                                    ->minValue(0.000000000001)
+                                    ->helperText(__('Rate relative to base currency (1.00 = base currency). Supports up to 12 decimal places.')),
 
                                 Select::make('decimal_places')
                                     ->label(__('Decimal Places'))

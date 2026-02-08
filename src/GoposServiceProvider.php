@@ -155,6 +155,13 @@ class GoposServiceProvider extends ServiceProvider
             \Gopos\Models\User::class => \Gopos\Policies\UserPolicy::class,
             \Gopos\Models\Role::class => \Gopos\Policies\RolePolicy::class,
             \Gopos\Models\Permission::class => \Gopos\Policies\PermissionPolicy::class,
+            \Gopos\Models\Department::class => \Gopos\Policies\DepartmentPolicy::class,
+            \Gopos\Models\Position::class => \Gopos\Policies\PositionPolicy::class,
+            \Gopos\Models\Employee::class => \Gopos\Policies\EmployeePolicy::class,
+            \Gopos\Models\LeaveType::class => \Gopos\Policies\LeaveTypePolicy::class,
+            \Gopos\Models\Leave::class => \Gopos\Policies\LeavePolicy::class,
+            \Gopos\Models\Holiday::class => \Gopos\Policies\HolidayPolicy::class,
+            \Gopos\Models\Payroll::class => \Gopos\Policies\PayrollPolicy::class,
         ];
 
         foreach ($policies as $model => $policy) {

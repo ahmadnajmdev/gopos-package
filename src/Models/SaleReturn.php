@@ -29,7 +29,7 @@ class SaleReturn extends Model
         'discount' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'paid_amount' => 'decimal:2',
-        'exchange_rate' => 'decimal:6',
+        'exchange_rate' => 'decimal:12',
     ];
 
     public static function boot()

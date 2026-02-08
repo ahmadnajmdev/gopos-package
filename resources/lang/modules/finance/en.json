@@ -207,5 +207,11 @@
     "Auto-fill remaining balance": "Auto-fill remaining balance",
     "Account Balance": "Account Balance",
     "Journal Lines": "Journal Lines",
-    "Journal entry must be balanced. Total Debit (:debit) must equal Total Credit (:credit).": "Journal entry must be balanced. Total Debit (:debit) must equal Total Credit (:credit)."
+    "Journal entry must be balanced. Total Debit (:debit) must equal Total Credit (:credit).": "Journal entry must be balanced. Total Debit (:debit) must equal Total Credit (:credit).",
+    "USD Exchange Rate": "USD Exchange Rate",
+    "Exchange rate updated": "Exchange rate updated",
+    "Invalid amount": "Invalid amount",
+    "USD currency not found": "USD currency not found",
+    "IQD": "IQD",
+    "Save": "Save"
 }

@@ -99,8 +99,7 @@ class BalanceSheetReport extends BaseReport
             if (abs($balance) >= 0.01) {
                 $result[] = [
                     'code' => $account->code,
-                    'name' => $account->name,
-                    'name_ar' => $account->name_ar ?? $account->name,
+                    'name' => $account->localized_name,
                     'balance' => $balance,
                 ];
             }

@@ -32,7 +32,7 @@ class JournalEntry extends Model
         'entry_date' => 'date',
         'total_debit' => 'decimal:2',
         'total_credit' => 'decimal:2',
-        'exchange_rate' => 'decimal:6',
+        'exchange_rate' => 'decimal:12',
         'posted_at' => 'datetime',
         'voided_at' => 'datetime',
     ];

@@ -47,14 +47,16 @@ class AccountResource extends Resource
             ->components([
                 Select::make('account_type_id')
                     ->label(__('Account Type'))
-                    ->options(AccountType::pluck('name', 'id'))
+                    ->options(fn () => AccountType::orderBy('display_order')->get()->pluck('localized_name', 'id'))
                     ->required()
                     ->searchable(),
                 Select::make('parent_id')
                     ->label(__('Parent Account'))
                     ->options(fn () => Account::query()
                         ->whereNull('parent_id')
-                        ->pluck('name', 'id'))
+                        ->orderBy('code')
+                        ->get()
+                        ->pluck('display_name', 'id'))
                     ->searchable()
                     ->nullable(),
                 TextInput::make('code')
@@ -68,6 +70,9 @@ class AccountResource extends Resource
                     ->maxLength(255),
                 TextInput::make('name_ar')
                     ->label(__('Name (Arabic)'))
+                    ->maxLength(255),
+                TextInput::make('name_ckb')
+                    ->label(__('Name (Kurdish)'))
                     ->maxLength(255),
                 TextInput::make('opening_balance')
                     ->label(__('Opening Balance'))
@@ -90,18 +95,14 @@ class AccountResource extends Resource
                     ->label(__('Code'))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('name')
+                TextColumn::make('localized_name')
                     ->label(__('Name'))
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('name_ar')
-                    ->label(__('Name (Arabic)'))
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('accountType.name')
+                    ->searchable(['name', 'name_ar', 'name_ckb'])
+                    ->sortable('name'),
+                TextColumn::make('accountType.localized_name')
                     ->label(__('Type'))
                     ->badge()
-                    ->color(fn ($state) => match ($state) {
+                    ->color(fn (Account $record) => match ($record->accountType?->name) {
                         'Asset' => 'success',
                         'Liability' => 'danger',
                         'Equity' => 'info',
@@ -109,7 +110,7 @@ class AccountResource extends Resource
                         'Expense' => 'warning',
                         default => 'gray',
                     }),
-                TextColumn::make('parent.name')
+                TextColumn::make('parent.localized_name')
                     ->label(__('Parent'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('current_balance')
@@ -129,7 +130,7 @@ class AccountResource extends Resource
             ->filters([
                 SelectFilter::make('account_type_id')
                     ->label(__('Account Type'))
-                    ->options(AccountType::pluck('name', 'id')),
+                    ->options(fn () => AccountType::orderBy('display_order')->get()->pluck('localized_name', 'id')),
                 SelectFilter::make('is_active')
                     ->label(__('Status'))
                     ->options([

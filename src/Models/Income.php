@@ -26,6 +26,7 @@ class Income extends Model
     {
         return [
             'income_date' => 'date',
+            'exchange_rate' => 'decimal:12',
         ];
     }
 

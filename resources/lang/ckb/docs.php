@@ -13,7 +13,7 @@ return [
     'faq' => 'پرسیارە باوەکان',
     'roles_permissions' => 'ڕۆڵ و دەسەڵاتەکان',
     'pos_features' => 'تایبەتمەندییەکانی خاڵی فرۆشتن',
-    'inventory_management' => 'بەڕێوەبردنی کۆگا',
+    'inventory_management' => 'بەڕێوەبردنی بڕ',
     'accounting_features' => 'تایبەتمەندییەکانی ژمێریاری',
     'hr_module' => 'بەشی سەرچاوە مرۆییەکان',
 

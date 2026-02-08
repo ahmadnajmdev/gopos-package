@@ -50,7 +50,7 @@ class CurrenciesTable
                     ->sortable()
                     ->formatStateUsing(fn ($state, $record) => $record->base
                             ? __('Base Currency')
-                            : number_format($state, 4)
+                            : rtrim(rtrim(number_format($state, 12), '0'), '.')
                     )
                     ->color(fn ($record) => $record->base ? 'success' : 'gray'),
                 TextColumn::make('decimal_places')

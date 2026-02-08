@@ -13,6 +13,8 @@
     @endphp
 
     <div class="space-y-6" dir="{{ $direction }}">
+        @livewire(\Gopos\Filament\Widgets\CurrencyRateWidget::class)
+
         <div>
             {{ $this->form }}
         </div>

@@ -113,11 +113,11 @@ class SeedDemoDataCommand extends Command
     protected function seedAccountTypes(): void
     {
         $types = [
-            ['name' => 'Asset', 'name_ar' => 'أصول', 'normal_balance' => 'debit', 'display_order' => 1],
-            ['name' => 'Liability', 'name_ar' => 'التزامات', 'normal_balance' => 'credit', 'display_order' => 2],
-            ['name' => 'Equity', 'name_ar' => 'حقوق الملكية', 'normal_balance' => 'credit', 'display_order' => 3],
-            ['name' => 'Revenue', 'name_ar' => 'إيرادات', 'normal_balance' => 'credit', 'display_order' => 4],
-            ['name' => 'Expense', 'name_ar' => 'مصروفات', 'normal_balance' => 'debit', 'display_order' => 5],
+            ['name' => 'Asset', 'name_ar' => 'أصول', 'name_ckb' => 'دارایی', 'normal_balance' => 'debit', 'display_order' => 1],
+            ['name' => 'Liability', 'name_ar' => 'التزامات', 'name_ckb' => 'قەرزەکان', 'normal_balance' => 'credit', 'display_order' => 2],
+            ['name' => 'Equity', 'name_ar' => 'حقوق الملكية', 'name_ckb' => 'مافی خاوەنداری', 'normal_balance' => 'credit', 'display_order' => 3],
+            ['name' => 'Revenue', 'name_ar' => 'إيرادات', 'name_ckb' => 'داهات', 'normal_balance' => 'credit', 'display_order' => 4],
+            ['name' => 'Expense', 'name_ar' => 'مصروفات', 'name_ckb' => 'خەرجی', 'normal_balance' => 'debit', 'display_order' => 5],
         ];
 
         foreach ($types as $type) {
@@ -158,32 +158,32 @@ class SeedDemoDataCommand extends Command
 
         $accounts = [
             // Assets
-            ['code' => '1000', 'name' => 'Cash', 'name_ar' => 'النقدية', 'type' => $assetType, 'opening_balance' => 50000000],
-            ['code' => '1100', 'name' => 'Bank', 'name_ar' => 'البنك', 'type' => $assetType, 'opening_balance' => 100000000],
-            ['code' => '1200', 'name' => 'Accounts Receivable', 'name_ar' => 'الذمم المدينة', 'type' => $assetType],
-            ['code' => '1300', 'name' => 'Inventory', 'name_ar' => 'المخزون', 'type' => $assetType],
-            ['code' => '1400', 'name' => 'Fixed Assets', 'name_ar' => 'الأصول الثابتة', 'type' => $assetType],
+            ['code' => '1000', 'name' => 'Cash', 'name_ar' => 'النقدية', 'name_ckb' => 'نەقد', 'type' => $assetType, 'opening_balance' => 50000000],
+            ['code' => '1100', 'name' => 'Bank', 'name_ar' => 'البنك', 'name_ckb' => 'بانک', 'type' => $assetType, 'opening_balance' => 100000000],
+            ['code' => '1200', 'name' => 'Accounts Receivable', 'name_ar' => 'الذمم المدينة', 'name_ckb' => 'قەرزی وەرگرتن', 'type' => $assetType],
+            ['code' => '1300', 'name' => 'Inventory', 'name_ar' => 'المخزون', 'name_ckb' => 'بڕ', 'type' => $assetType],
+            ['code' => '1400', 'name' => 'Fixed Assets', 'name_ar' => 'الأصول الثابتة', 'name_ckb' => 'دارایی جێگیر', 'type' => $assetType],
 
             // Liabilities
-            ['code' => '2000', 'name' => 'Accounts Payable', 'name_ar' => 'الذمم الدائنة', 'type' => $liabilityType],
-            ['code' => '2100', 'name' => 'Taxes Payable', 'name_ar' => 'الضرائب المستحقة', 'type' => $liabilityType],
-            ['code' => '2200', 'name' => 'Salaries Payable', 'name_ar' => 'الرواتب المستحقة', 'type' => $liabilityType],
+            ['code' => '2000', 'name' => 'Accounts Payable', 'name_ar' => 'الذمم الدائنة', 'name_ckb' => 'قەرزی دانەوە', 'type' => $liabilityType],
+            ['code' => '2100', 'name' => 'Taxes Payable', 'name_ar' => 'الضرائب المستحقة', 'name_ckb' => 'باجی دانەوە', 'type' => $liabilityType],
+            ['code' => '2200', 'name' => 'Salaries Payable', 'name_ar' => 'الرواتب المستحقة', 'name_ckb' => 'مووچەی دانەوە', 'type' => $liabilityType],
 
             // Equity
-            ['code' => '3000', 'name' => 'Owner Capital', 'name_ar' => 'رأس المال', 'type' => $equityType, 'opening_balance' => 100000000],
-            ['code' => '3100', 'name' => 'Retained Earnings', 'name_ar' => 'الأرباح المحتجزة', 'type' => $equityType],
+            ['code' => '3000', 'name' => 'Owner Capital', 'name_ar' => 'رأس المال', 'name_ckb' => 'سەرمایەی خاوەن', 'type' => $equityType, 'opening_balance' => 100000000],
+            ['code' => '3100', 'name' => 'Retained Earnings', 'name_ar' => 'الأرباح المحتجزة', 'name_ckb' => 'قازانجی پاشەکەوتکراو', 'type' => $equityType],
 
             // Revenue
-            ['code' => '4000', 'name' => 'Sales Revenue', 'name_ar' => 'إيرادات المبيعات', 'type' => $revenueType],
-            ['code' => '4100', 'name' => 'Service Revenue', 'name_ar' => 'إيرادات الخدمات', 'type' => $revenueType],
-            ['code' => '4200', 'name' => 'Other Income', 'name_ar' => 'إيرادات أخرى', 'type' => $revenueType],
+            ['code' => '4000', 'name' => 'Sales Revenue', 'name_ar' => 'إيرادات المبيعات', 'name_ckb' => 'داهاتی فرۆشتن', 'type' => $revenueType],
+            ['code' => '4100', 'name' => 'Service Revenue', 'name_ar' => 'إيرادات الخدمات', 'name_ckb' => 'داهاتی خزمەتگوزاری', 'type' => $revenueType],
+            ['code' => '4200', 'name' => 'Other Income', 'name_ar' => 'إيرادات أخرى', 'name_ckb' => 'داهاتی تر', 'type' => $revenueType],
 
             // Expenses
-            ['code' => '5000', 'name' => 'Cost of Goods Sold', 'name_ar' => 'تكلفة البضاعة المباعة', 'type' => $expenseType],
-            ['code' => '5100', 'name' => 'Salaries Expense', 'name_ar' => 'مصروف الرواتب', 'type' => $expenseType],
-            ['code' => '5200', 'name' => 'Rent Expense', 'name_ar' => 'مصروف الإيجار', 'type' => $expenseType],
-            ['code' => '5300', 'name' => 'Utilities Expense', 'name_ar' => 'مصروف المرافق', 'type' => $expenseType],
-            ['code' => '5400', 'name' => 'Marketing Expense', 'name_ar' => 'مصروف التسويق', 'type' => $expenseType],
+            ['code' => '5000', 'name' => 'Cost of Goods Sold', 'name_ar' => 'تكلفة البضاعة المباعة', 'name_ckb' => 'تێچووی کاڵای فرۆشراو', 'type' => $expenseType],
+            ['code' => '5100', 'name' => 'Salaries Expense', 'name_ar' => 'مصروف الرواتب', 'name_ckb' => 'خەرجی مووچە', 'type' => $expenseType],
+            ['code' => '5200', 'name' => 'Rent Expense', 'name_ar' => 'مصروف الإيجار', 'name_ckb' => 'خەرجی کرێ', 'type' => $expenseType],
+            ['code' => '5300', 'name' => 'Utilities Expense', 'name_ar' => 'مصروف المرافق', 'name_ckb' => 'خەرجی خزمەتگوزاریەکان', 'type' => $expenseType],
+            ['code' => '5400', 'name' => 'Marketing Expense', 'name_ar' => 'مصروف التسويق', 'name_ckb' => 'خەرجی بازاڕکردن', 'type' => $expenseType],
         ];
 
         foreach ($accounts as $account) {
@@ -195,6 +195,7 @@ class SeedDemoDataCommand extends Command
                     'code' => $account['code'],
                     'name' => $account['name'],
                     'name_ar' => $account['name_ar'],
+                    'name_ckb' => $account['name_ckb'],
                     'is_active' => true,
                     'is_system' => true,
                     'opening_balance' => $account['opening_balance'] ?? 0,

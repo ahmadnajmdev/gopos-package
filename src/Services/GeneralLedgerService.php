@@ -397,9 +397,8 @@ class GeneralLedgerService
 
             $trialBalance[] = [
                 'account_code' => $account->code,
-                'account_name' => $account->name,
-                'account_name_ar' => $account->name_ar,
-                'account_type' => $account->accountType?->name,
+                'account_name' => $account->localized_name,
+                'account_type' => $account->accountType?->localized_name,
                 'debit' => $debit,
                 'credit' => $credit,
             ];

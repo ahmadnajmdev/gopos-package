@@ -17,9 +17,11 @@ use Gopos\Services\Reports\BalanceSheetReport;
 use Gopos\Services\Reports\BulkReportExporter;
 use Gopos\Services\Reports\CashFlowReport;
 use Gopos\Services\Reports\CustomerBalancesReport;
+use Gopos\Services\Reports\EmployeeHeadcountReport;
 use Gopos\Services\Reports\FinancialReport;
 use Gopos\Services\Reports\IncomeStatementReport;
 use Gopos\Services\Reports\InventoryValuationReport;
+use Gopos\Services\Reports\PayrollSummaryReport;
 use Gopos\Services\Reports\PurchasesReport;
 use Gopos\Services\Reports\SaleByProductReport;
 use Gopos\Services\Reports\SalesReport;
@@ -141,6 +143,8 @@ class BulkExportPage extends Page implements HasForms
             TrialBalanceReport::class => __('Trial Balance'),
             FinancialReport::class => __('Financial Report'),
             CashFlowReport::class => __('Cash Flow Report'),
+            EmployeeHeadcountReport::class => __('Employee Headcount Report'),
+            PayrollSummaryReport::class => __('Payroll Summary Report'),
         ];
     }
 

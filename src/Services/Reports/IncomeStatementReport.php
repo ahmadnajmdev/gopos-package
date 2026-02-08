@@ -47,7 +47,6 @@ class IncomeStatementReport extends BaseReport
                 ['category' => __('Revenue'), 'category_ar' => 'الإيرادات', 'amount' => $totalRevenue, 'currency' => $currencySymbol, 'is_header' => true],
                 ...array_map(fn ($a) => [
                     'category' => "  {$a['code']} - {$a['name']}",
-                    'category_ar' => "  {$a['code']} - {$a['name_ar']}",
                     'amount' => $a['balance'],
                     'currency' => $currencySymbol,
                 ], $revenueDetails),
@@ -103,8 +102,7 @@ class IncomeStatementReport extends BaseReport
             if (abs($balance) >= 0.01) {
                 $result[] = [
                     'code' => $account->code,
-                    'name' => $account->name,
-                    'name_ar' => $account->name_ar ?? $account->name,
+                    'name' => $account->localized_name,
                     'balance' => $balance,
                 ];
             }

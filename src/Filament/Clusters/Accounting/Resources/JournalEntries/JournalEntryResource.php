@@ -105,7 +105,7 @@ class JournalEntryResource extends Resource
                                                 ->orderBy('code')
                                                 ->get()
                                                 ->mapWithKeys(fn ($account) => [
-                                                    $account->id => $account->code.' - '.$account->name.' ('.$currencySymbol.number_format($account->current_balance, 2).')',
+                                                    $account->id => $account->code.' - '.$account->localized_name.' ('.$currencySymbol.number_format($account->current_balance, 2).')',
                                                 ]))
                                             ->required()
                                             ->searchable()

@@ -65,10 +65,8 @@ class TrialBalanceReport extends BaseReport
 
             $rows[] = [
                 'code' => $account->code,
-                'account' => $account->name,
-                'account_ar' => $account->name_ar ?? $account->name,
-                'account_type' => $account->accountType?->name,
-                'account_type_ar' => $account->accountType?->name_ar,
+                'account' => $account->localized_name,
+                'account_type' => $account->accountType?->localized_name,
                 'debit' => $debit,
                 'credit' => $credit,
             ];

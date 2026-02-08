@@ -40,7 +40,7 @@ class Sale extends Model
         'sub_total' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'amount_in_base_currency' => 'decimal:2',
-        'exchange_rate' => 'decimal:6',
+        'exchange_rate' => 'decimal:12',
         'tax_rate' => 'decimal:4',
         'tax_amount' => 'decimal:2',
         'tax_amount_in_base_currency' => 'decimal:2',

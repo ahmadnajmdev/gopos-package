@@ -1,0 +1,48 @@
+<?php
+
+namespace Gopos\Enums;
+
+use BackedEnum;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Support\Htmlable;
+
+enum LeaveStatus: string implements HasColor, HasIcon, HasLabel
+{
+    case Pending = 'pending';
+    case Approved = 'approved';
+    case Rejected = 'rejected';
+    case Cancelled = 'cancelled';
+
+    public function getLabel(): string|Htmlable|null
+    {
+        return match ($this) {
+            self::Pending => __('Pending'),
+            self::Approved => __('Approved'),
+            self::Rejected => __('Rejected'),
+            self::Cancelled => __('Cancelled'),
+        };
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::Pending => 'warning',
+            self::Approved => 'success',
+            self::Rejected => 'danger',
+            self::Cancelled => 'gray',
+        };
+    }
+
+    public function getIcon(): string|BackedEnum|Htmlable|null
+    {
+        return match ($this) {
+            self::Pending => Heroicon::OutlinedClock,
+            self::Approved => Heroicon::OutlinedCheckCircle,
+            self::Rejected => Heroicon::OutlinedXCircle,
+            self::Cancelled => Heroicon::OutlinedNoSymbol,
+        };
+    }
+}

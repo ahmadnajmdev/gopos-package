@@ -226,5 +226,11 @@
     "Templates": "داڕێژەکان",
     "Auto-fill remaining balance": "پڕکردنەوەی ئۆتۆماتیکی باڵانسی ماوە",
     "Account Balance": "باڵانسی هەژمار",
-    "Journal entry must be balanced. Total Debit (:debit) must equal Total Credit (:credit).": "قەیدی یۆمیە دەبێت هاوسەنگ بێت. کۆی دەین (:debit) دەبێت یەکسان بێت بە کۆی داین (:credit)."
+    "Journal entry must be balanced. Total Debit (:debit) must equal Total Credit (:credit).": "قەیدی یۆمیە دەبێت هاوسەنگ بێت. کۆی دەین (:debit) دەبێت یەکسان بێت بە کۆی داین (:credit).",
+    "USD Exchange Rate": "ڕێژەی گۆڕینی دۆلار",
+    "Exchange rate updated": "ڕێژەی گۆڕین نوێکرایەوە",
+    "Invalid amount": "بڕی نادروست",
+    "USD currency not found": "دراوی دۆلار نەدۆزرایەوە",
+    "IQD": "د.ع",
+    "Save": "پاشەکەوتکردن"
 }

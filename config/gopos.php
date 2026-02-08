@@ -16,6 +16,7 @@ return [
         'inventory' => true,
         'accounting' => true,
 
+        'hr' => true,
         'pos' => true,
         'reports' => true,
     ],

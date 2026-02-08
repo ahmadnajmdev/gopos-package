@@ -25,7 +25,7 @@ class PosSessionTransaction extends Model
 
     protected $casts = [
         'amount' => 'decimal:2',
-        'exchange_rate' => 'decimal:6',
+        'exchange_rate' => 'decimal:12',
         'created_at' => 'datetime',
     ];
 

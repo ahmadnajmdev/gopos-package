@@ -24,6 +24,7 @@ class Expense extends Model
     {
         return [
             'expense_date' => 'date',
+            'exchange_rate' => 'decimal:12',
         ];
     }
 
