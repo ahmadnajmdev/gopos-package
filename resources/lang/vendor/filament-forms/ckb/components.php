@@ -125,7 +125,7 @@ return [
                 ],
 
                 'set_aspect_ratio' => [
-                    'label' => 'دانانی تێکڕای لاکان بۆ :ratio',
+                    'label' => 'دانانی ڕێژەی لاکان بۆ :ratio',
                 ],
 
                 'save' => [
@@ -177,7 +177,7 @@ return [
 
             'aspect_ratios' => [
 
-                'label' => 'تێکڕای لاکان',
+                'label' => 'ڕێژەی لاکان',
 
                 'no_fixed' => [
                     'label' => 'سەربەخۆ',
@@ -214,7 +214,7 @@ return [
             ],
 
             'value' => [
-                'label' => 'نرخ',
+                'label' => 'بەها',
             ],
 
         ],
@@ -358,7 +358,7 @@ return [
 
                 'modal' => [
 
-                    'heading' => 'دەسکاریکردن',
+                    'heading' => 'دەستکاریکردن',
 
                     'actions' => [
 
@@ -379,7 +379,7 @@ return [
             'false' => 'نەخێر',
         ],
 
-        'loading_message' => 'چاوەروان بە...',
+        'loading_message' => 'چاوەڕوان بە...',
 
         'max_items_message' => 'تەنها :count دەتواندرێت دیاری بکرێت.',
 

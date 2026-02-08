@@ -16,7 +16,7 @@ return [
 
     'messages' => [
         'notification_not_received' => 'ئیمەیڵەکەت پێ نەگەیشت بۆ چالاککردن؟',
-        'notification_sent' => 'ئیمەیڵێکمان نارد بۆ :email کە ڕێنماییەکەنی تێدایە بۆ چالاککردنی هەژمارەکەت..',
+        'notification_sent' => 'ئیمەیڵێکمان نارد بۆ :email کە ڕێنماییەکانی تێدایە بۆ چالاککردنی هەژمارەکەت.',
     ],
 
     'notifications' => [

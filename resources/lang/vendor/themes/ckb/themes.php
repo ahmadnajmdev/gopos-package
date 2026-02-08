@@ -5,7 +5,7 @@ return [
     'themes' => 'ڕووکارەکان', // Rûkarakan
     'primary_color' => 'ڕەنگی سەرەکی', // Rengî Serekî
     'select_base_color' => 'ڕەنگی بنچینەیی بۆ ڕووکارەکەت هەڵبژێرە.', // Rengî binçîneyî bo rûkareket hełbijêre.
-    'custom' => 'تایبەت.', // Taybet.
+    'custom' => 'تایبەت', // Taybet
     'no_changing_primary_color' => 'ئەم ڕووکارە پشتگیری لە گۆڕینی ڕەنگی سەرەکی ناکات.', // Em rûkare piştgîrî le gořînî rengî serekî nakat.
     'support_changing_primary_color' => 'ئەم ڕووکارە پشتگیری لە گۆڕینی ڕەنگی سەرەکی دەکات.', // Em rûkare piştgîrî le gořînî rengî serekî dekat.
     'select_interface' => 'هەڵبژێرە چۆن دەتەوێت ڕووکارەکەت دەربکەوێت.', // Hełbijêre çon detewêt rûkareket derbikewêt.

@@ -8,7 +8,7 @@ return [
 
         'modal' => [
 
-            'heading' => ':دروستکردنی :label',
+            'heading' => 'دروستکردنی :label',
 
             'actions' => [
 

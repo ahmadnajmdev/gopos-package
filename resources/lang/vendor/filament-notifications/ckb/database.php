@@ -9,7 +9,7 @@ return [
         'actions' => [
 
             'clear' => [
-                'label' => 'سرینەوەی هەموو',
+                'label' => 'سڕینەوەی هەموو',
             ],
 
             'mark_all_as_read' => [
