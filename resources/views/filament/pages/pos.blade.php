@@ -1,4 +1,26 @@
 <x-filament-panels::page>
+    @if (!$this->hasOpenSession())
+        <div class="flex flex-col items-center justify-center py-16 px-6">
+            <div class="w-20 h-20 bg-warning-100 dark:bg-warning-900/30 rounded-full flex items-center justify-center mb-6">
+                <x-heroicon-o-exclamation-triangle class="w-10 h-10 text-warning-500" />
+            </div>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                {{ __('No Active Shift') }}
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6 max-w-md">
+                {{ __('You need to open a shift before you can use the POS. Please go to Shift Management to start your shift.') }}
+            </p>
+            <x-filament::button
+                tag="a"
+                href="{{ \Gopos\Filament\Pages\PosShiftManagement::getUrl() }}"
+                icon="heroicon-o-clock"
+                color="primary"
+                size="lg"
+            >
+                {{ __('Open Shift') }}
+            </x-filament::button>
+        </div>
+    @else
     <div class="w-full mb-4">
         <div class="flex flex-col md:flex-row gap-4 w-full items-center">
             <!-- Hidden Barcode Input (autofocus) -->
@@ -894,4 +916,5 @@
             printTab.document.close();
         };
     </script>
+    @endif
 </x-filament-panels::page>

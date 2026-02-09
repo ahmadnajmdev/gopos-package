@@ -268,6 +268,16 @@ class Pos extends Page implements HasForms
 
     public function addToCart($productId)
     {
+        if (! $this->hasOpenSession()) {
+            Notification::make()
+                ->title(__('No Active Shift'))
+                ->body(__('You need to open a shift before using the POS.'))
+                ->danger()
+                ->send();
+
+            return;
+        }
+
         $product = Product::query()
             ->where('id', $productId)->first();
 
@@ -505,6 +515,16 @@ class Pos extends Page implements HasForms
 
     public function createInvoice()
     {
+        if (! $this->hasOpenSession()) {
+            Notification::make()
+                ->title(__('No Active Shift'))
+                ->body(__('You need to open a shift before creating an invoice.'))
+                ->danger()
+                ->send();
+
+            return;
+        }
+
         try {
             $this->validate([
                 'formData.sale_date' => 'required|date',
@@ -586,6 +606,16 @@ class Pos extends Page implements HasForms
 
     public function createInvoiceAndPayment()
     {
+        if (! $this->hasOpenSession()) {
+            Notification::make()
+                ->title(__('No Active Shift'))
+                ->body(__('You need to open a shift before creating an invoice.'))
+                ->danger()
+                ->send();
+
+            return;
+        }
+
         try {
             $this->validate([
                 'formData.sale_date' => 'required|date',
