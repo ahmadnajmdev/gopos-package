@@ -28,6 +28,7 @@ use Gopos\Observers\PaymentObserver;
 use Gopos\Observers\PurchaseObserver;
 use Gopos\Observers\SaleObserver;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -59,6 +60,8 @@ class GoposServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->registerMorphMap();
+
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'gopos');
@@ -175,6 +178,15 @@ class GoposServiceProvider extends ServiceProvider
         Livewire::component('invoice-p-d-f', \Gopos\Http\Livewire\InvoicePDF::class);
         Livewire::component('sale-invoice', \Gopos\Http\Livewire\SaleInvoice::class);
         Livewire::component('install-wizard', \Gopos\Http\Livewire\Install\InstallWizard::class);
+    }
+
+    protected function registerMorphMap(): void
+    {
+        $userModel = config('auth.providers.users.model', \App\Models\User::class);
+
+        Relation::enforceMorphMap([
+            'user' => $userModel,
+        ]);
     }
 
     protected function registerModularTranslations(): void
