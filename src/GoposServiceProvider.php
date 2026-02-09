@@ -184,7 +184,7 @@ class GoposServiceProvider extends ServiceProvider
     {
         $userModel = config('auth.providers.users.model', \App\Models\User::class);
 
-        Relation::enforceMorphMap([
+        Relation::morphMap([
             'user' => $userModel,
         ]);
     }
