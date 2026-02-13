@@ -5,6 +5,12 @@ namespace Gopos\Filament\Clusters\Reports\Pages;
 use BackedEnum;
 use Filament\Pages\Page;
 use Gopos\Filament\Clusters\Reports\ReportsCluster;
+use Gopos\Models\Currency;
+use Gopos\Models\Product;
+use Gopos\Models\ProductBatch;
+use Gopos\Models\Purchase;
+use Gopos\Models\Sale;
+use Gopos\Services\FinancialService;
 
 class ReportsDashboard extends Page
 {
@@ -125,5 +131,142 @@ class ReportsDashboard extends Page
                 ],
             ],
         ];
+    }
+
+    public function getCurrency(): ?string
+    {
+        return Currency::getBaseCurrency()?->symbol;
+    }
+
+    public function getSalesKpis(): array
+    {
+        return cache()->remember('reports_dashboard_sales_kpis_'.auth()->user()?->branch_id, 300, function () {
+            $todaysSales = Sale::query()
+                ->whereDate('sale_date', today())
+                ->sum('amount_in_base_currency');
+
+            $thisMonthCount = Sale::query()
+                ->whereBetween('sale_date', [now()->startOfMonth(), now()->endOfMonth()])
+                ->count();
+
+            $thisMonthTotal = Sale::query()
+                ->whereBetween('sale_date', [now()->startOfMonth(), now()->endOfMonth()])
+                ->sum('amount_in_base_currency');
+
+            $lastMonthTotal = Sale::query()
+                ->whereBetween('sale_date', [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()])
+                ->sum('amount_in_base_currency');
+
+            $growth = $lastMonthTotal > 0
+                ? round((($thisMonthTotal - $lastMonthTotal) / $lastMonthTotal) * 100, 1)
+                : ($thisMonthTotal > 0 ? 100 : 0);
+
+            return [
+                'todays_sales' => $todaysSales,
+                'this_month_count' => $thisMonthCount,
+                'month_growth' => $growth,
+            ];
+        });
+    }
+
+    public function getPurchaseKpis(): array
+    {
+        return cache()->remember('reports_dashboard_purchase_kpis_'.auth()->user()?->branch_id, 300, function () {
+            $thisMonthTotal = Purchase::query()
+                ->whereBetween('purchase_date', [now()->startOfMonth(), now()->endOfMonth()])
+                ->sum('amount_in_base_currency');
+
+            $outstandingPayables = Purchase::query()
+                ->whereColumn('paid_amount', '<', 'total_amount')
+                ->selectRaw('SUM(amount_in_base_currency - (paid_amount * COALESCE(exchange_rate, 1))) as total_due')
+                ->value('total_due') ?? 0;
+
+            return [
+                'this_month_total' => $thisMonthTotal,
+                'outstanding_payables' => abs($outstandingPayables),
+            ];
+        });
+    }
+
+    public function getInventoryKpis(): array
+    {
+        return cache()->remember('reports_dashboard_inventory_kpis_'.auth()->user()?->branch_id, 300, function () {
+            $totalStockValue = Product::query()
+                ->selectRaw('SUM(stock * average_cost) as total_value')
+                ->value('total_value') ?? 0;
+
+            $lowStockCount = Product::query()->lowStock()->count();
+
+            $expiringCount = ProductBatch::query()
+                ->active()
+                ->withStock()
+                ->expiringSoon(30)
+                ->count();
+
+            return [
+                'total_stock_value' => $totalStockValue,
+                'low_stock_count' => $lowStockCount,
+                'expiring_count' => $expiringCount,
+            ];
+        });
+    }
+
+    public function getCustomerKpis(): array
+    {
+        return cache()->remember('reports_dashboard_customer_kpis_'.auth()->user()?->branch_id, 300, function () {
+            $outstandingBalances = Sale::query()
+                ->whereNotNull('customer_id')
+                ->whereColumn('paid_amount', '<', 'total_amount')
+                ->selectRaw('SUM(amount_in_base_currency - (paid_amount * COALESCE(exchange_rate, 1))) as total_due')
+                ->value('total_due') ?? 0;
+
+            $activeCustomers = Sale::query()
+                ->whereNotNull('customer_id')
+                ->where('sale_date', '>=', now()->subDays(30))
+                ->distinct('customer_id')
+                ->count('customer_id');
+
+            return [
+                'outstanding_balances' => abs($outstandingBalances),
+                'active_customers' => $activeCustomers,
+            ];
+        });
+    }
+
+    public function getFinancialKpis(): array
+    {
+        return cache()->remember('reports_dashboard_financial_kpis_'.auth()->user()?->branch_id, 300, function () {
+            $startOfMonth = now()->startOfMonth()->toDateString();
+            $endOfMonth = now()->endOfMonth()->toDateString();
+
+            $revenue = FinancialService::getIncome($startOfMonth, $endOfMonth);
+            $cogs = FinancialService::getCostOfGoodsSold($startOfMonth, $endOfMonth);
+            $netProfit = FinancialService::getProfit($startOfMonth, $endOfMonth);
+
+            $grossMargin = $revenue > 0
+                ? round((($revenue - $cogs) / $revenue) * 100, 1)
+                : 0;
+
+            return [
+                'net_profit' => $netProfit,
+                'gross_margin' => $grossMargin,
+                'revenue' => $revenue,
+            ];
+        });
+    }
+
+    public function getSalesSparklineData(): array
+    {
+        return cache()->remember('reports_dashboard_sparkline_'.auth()->user()?->branch_id, 300, function () {
+            $days = collect(range(6, 0))->map(fn ($i) => now()->subDays($i)->toDateString());
+
+            $sales = Sale::query()
+                ->whereBetween('sale_date', [$days->first(), $days->last()])
+                ->selectRaw('DATE(sale_date) as sale_day, SUM(amount_in_base_currency) as daily_total')
+                ->groupBy('sale_day')
+                ->pluck('daily_total', 'sale_day');
+
+            return $days->map(fn ($date) => (float) ($sales[$date] ?? 0))->values()->toArray();
+        });
     }
 }

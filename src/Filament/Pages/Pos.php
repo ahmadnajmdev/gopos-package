@@ -839,9 +839,86 @@ class Pos extends Page implements HasForms
         $receiptService = app(ReceiptPrinterService::class);
         $receiptData = $receiptService->generateReceipt($sale);
 
-        // Use js() for direct JavaScript execution with JSON encoding for safety
-        $htmlJson = json_encode($receiptData['html']);
-        $this->js("window.printThermalReceipt({$htmlJson})");
+        $fullHtml = $this->buildReceiptPageHtml($receiptData['html']);
+        $htmlJson = json_encode($fullHtml);
+        $popupAlert = json_encode(__('Please allow popups for printing receipts'));
+
+        $this->js("
+            var printTab = window.open('', '_blank');
+            if (printTab) {
+                printTab.document.write({$htmlJson});
+                printTab.document.close();
+            } else {
+                alert({$popupAlert});
+            }
+        ");
+    }
+
+    private function buildReceiptPageHtml(string $receiptHtml): string
+    {
+        $direction = in_array(app()->getLocale(), ['ar', 'ckb']) ? 'rtl' : 'ltr';
+        $title = e(__('Receipt').' - '.config('app.name'));
+        $printLabel = e(__('Print Receipt'));
+        $closeLabel = e(__('Close'));
+
+        return <<<HTML
+        <!DOCTYPE html>
+        <html dir="{$direction}">
+        <head>
+            <meta charset="UTF-8">
+            <title>{$title}</title>
+            <style>
+                @page { size: 80mm auto; margin: 0; }
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                html { background: #f3f4f6; }
+                body {
+                    font-family: 'Courier New', 'Lucida Console', monospace;
+                    font-size: 12px;
+                    width: 80mm;
+                    max-width: 80mm;
+                    margin: 20px auto;
+                    padding: 5mm;
+                    background: white;
+                    color: black;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    border-radius: 4px;
+                }
+                .receipt { width: 100% !important; max-width: 74mm !important; }
+                table { width: 100%; border-collapse: collapse; }
+                td, th { padding: 2px 0; vertical-align: top; }
+                hr { border: none; border-top: 1px dashed #000; margin: 8px 0; }
+                h2 { font-size: 16px; margin-bottom: 5px; text-align: center; }
+                .actions { width: 80mm; max-width: 80mm; margin: 0 auto 20px; display: flex; gap: 10px; }
+                .print-btn {
+                    flex: 1; padding: 12px 20px; background: #4F46E5; color: white;
+                    border: none; border-radius: 8px; cursor: pointer; font-size: 14px;
+                    font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;
+                }
+                .print-btn:hover { background: #4338CA; }
+                .close-btn {
+                    padding: 12px 20px; background: #6B7280; color: white;
+                    border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;
+                }
+                .close-btn:hover { background: #4B5563; }
+                @media print {
+                    html { background: white; }
+                    body { width: 80mm; max-width: 80mm; margin: 0; box-shadow: none; border-radius: 0; }
+                    .no-print { display: none !important; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="no-print actions">
+                <button class="print-btn" onclick="window.print()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    {$printLabel}
+                </button>
+                <button class="close-btn" onclick="window.close()">{$closeLabel}</button>
+            </div>
+            {$receiptHtml}
+        </body>
+        </html>
+        HTML;
     }
 
     public function viewInvoice(): void

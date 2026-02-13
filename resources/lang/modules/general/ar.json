@@ -810,5 +810,13 @@
     "Financial Report": "التقرير المالي",
     "Cash Flow Report": "تقرير التدفق النقدي",
     "Reports & Analytics": "التقارير والتحليلات",
-    "Reports Dashboard": "لوحة تحكم التقارير"
+    "Reports Dashboard": "لوحة تحكم التقارير",
+    "Sales This Month": "مبيعات هذا الشهر",
+    "MoM Growth": "النمو الشهري",
+    "Purchases This Month": "مشتريات هذا الشهر",
+    "Outstanding Balances": "الأرصدة المستحقة",
+    "Active Customers": "العملاء النشطون",
+    "Last 30 days": "آخر 30 يوم",
+    "Revenue This Month": "الإيرادات هذا الشهر",
+    "Gross Margin": "هامش الربح الإجمالي"
 }

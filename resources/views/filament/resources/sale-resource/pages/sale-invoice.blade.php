@@ -32,7 +32,7 @@
                     <meta charset="UTF-8">
                     <title>{{ __('Receipt') }} - {{ config('app.name') }}</title>
                     <style>
-                        @page {
+                        @@page {
                             size: 80mm auto;
                             margin: 0;
                         }
@@ -116,7 +116,7 @@
                         .close-btn:hover {
                             background: #4B5563;
                         }
-                        @media print {
+                        @@media print {
                             html {
                                 background: white;
                             }

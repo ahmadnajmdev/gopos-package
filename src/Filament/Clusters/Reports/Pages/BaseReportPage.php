@@ -64,6 +64,8 @@ abstract class BaseReportPage extends Page implements HasForms
         return $schema
             ->schema([
                 Section::make(__('Report Filters'))
+                    ->icon('heroicon-m-funnel')
+                    ->description(__('Set the date range and branch to generate your report'))
                     ->schema([
                         Select::make('branch_id')
                             ->label(__('Branch'))
@@ -89,7 +91,15 @@ abstract class BaseReportPage extends Page implements HasForms
                             ->label(__('End Date'))
                             ->required()
                             ->live(),
-                    ])->columns(4),
+                    ])
+                    ->columns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 4,
+                    ])
+                    ->compact()
+                    ->collapsible()
+                    ->columnSpanFull(),
             ])
             ->statePath('data');
     }
