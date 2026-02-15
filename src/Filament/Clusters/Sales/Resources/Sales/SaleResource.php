@@ -4,7 +4,9 @@ namespace Gopos\Filament\Clusters\Sales\Resources\Sales;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -31,6 +33,7 @@ use Filament\Tables\Filters\QueryBuilder\Constraints\RelationshipConstraint;
 use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Gopos\Enums\PaymentType;
 use Gopos\Filament\Clusters\Sales\Resources\Customers\CustomerResource;
 use Gopos\Filament\Clusters\Sales\Resources\SaleReturns\SaleReturnResource;
 use Gopos\Filament\Clusters\Sales\Resources\Sales\Pages\CreateSale;
@@ -163,8 +166,13 @@ class SaleResource extends Resource
                             ->maxValue(fn (Get $get) => $get('total_amount'))
                             ->suffix(' '.Currency::getBaseCurrency()?->symbol)
                             ->default(0.00),
+                        Select::make('payment_type')
+                            ->label(__('Payment Type'))
+                            ->options(PaymentType::class)
+                            ->default(PaymentType::Full)
+                            ->required(),
                     ])
-                    ->columns(4)
+                    ->columns(5)
                     ->columnSpanFull(),
                 Section::make(__('Additional Information'))
                     ->schema([
@@ -224,6 +232,11 @@ class SaleResource extends Resource
                         $record->paid_amount > 0 => 'warning',
                         default => 'danger',
                     }),
+                TextColumn::make('payment_type')
+                    ->label(__('Payment Type'))
+                    ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sub_total')
                     ->label(__('Subtotal'))
                     ->numeric(locale: 'en')
@@ -294,6 +307,8 @@ class SaleResource extends Resource
                         'sale_id' => $record->id,
                     ])),
                 ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -426,6 +441,32 @@ class SaleResource extends Resource
                                     ]),
                             ]),
                     ]),
+
+                Section::make(__('Installment Schedule'))
+                    ->schema([
+                        RepeatableEntry::make('installments')
+                            ->label('')
+                            ->schema([
+                                TextEntry::make('installment_number')
+                                    ->label(__('#')),
+                                TextEntry::make('due_date')
+                                    ->label(__('Due Date'))
+                                    ->date(),
+                                TextEntry::make('amount')
+                                    ->label(__('Amount'))
+                                    ->numeric(locale: 'en')
+                                    ->suffix(fn () => ' '.$currencySymbol),
+                                TextEntry::make('paid_amount')
+                                    ->label(__('Paid'))
+                                    ->numeric(locale: 'en')
+                                    ->suffix(fn () => ' '.$currencySymbol),
+                                TextEntry::make('status')
+                                    ->label(__('Status'))
+                                    ->badge(),
+                            ])
+                            ->columns(5),
+                    ])
+                    ->visible(fn ($record) => $record->installments->isNotEmpty()),
 
                 Section::make(__('Additional Information'))
                     ->schema([

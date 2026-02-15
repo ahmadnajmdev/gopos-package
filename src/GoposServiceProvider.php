@@ -2,9 +2,11 @@
 
 namespace Gopos;
 
+use Gopos\Console\Commands\ExpireQuotations;
 use Gopos\Console\Commands\ImportDatabase;
 use Gopos\Console\Commands\MakeReport;
 use Gopos\Console\Commands\MakeReportPage;
+use Gopos\Console\Commands\MarkOverdueInstallments;
 use Gopos\Console\Commands\Refresh;
 use Gopos\Console\Commands\SeedDemoDataCommand;
 use Gopos\Console\Commands\SendTestEmail;
@@ -85,6 +87,8 @@ class GoposServiceProvider extends ServiceProvider
                 Refresh::class,
                 SeedDemoDataCommand::class,
                 SendTestEmail::class,
+                ExpireQuotations::class,
+                MarkOverdueInstallments::class,
             ]);
 
             $this->publishes([
@@ -166,6 +170,7 @@ class GoposServiceProvider extends ServiceProvider
             \Gopos\Models\Holiday::class => \Gopos\Policies\HolidayPolicy::class,
             \Gopos\Models\Payroll::class => \Gopos\Policies\PayrollPolicy::class,
             \Gopos\Models\Branch::class => \Gopos\Policies\BranchPolicy::class,
+            \Gopos\Models\Quotation::class => \Gopos\Policies\QuotationPolicy::class,
         ];
 
         foreach ($policies as $model => $policy) {

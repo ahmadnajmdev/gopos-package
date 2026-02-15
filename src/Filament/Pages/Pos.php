@@ -371,6 +371,12 @@ class Pos extends Page implements HasForms
 
     public function updatedCart()
     {
+        foreach ($this->cart as $key => $item) {
+            if ((float) ($item['price'] ?? 0) < 0) {
+                $this->cart[$key]['price'] = 0;
+            }
+        }
+
         $this->calculateFormData();
     }
 

@@ -2,6 +2,7 @@
 
 namespace Gopos\Models;
 
+use Gopos\Enums\PaymentType;
 use Gopos\Models\Concerns\Auditable;
 use Gopos\Models\Concerns\BelongsToBranch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,6 +34,7 @@ class Sale extends Model
         'total_amount',
         'amount_in_base_currency',
         'status',
+        'payment_type',
         'notes',
     ];
 
@@ -47,6 +49,7 @@ class Sale extends Model
         'tax_rate' => 'decimal:4',
         'tax_amount' => 'decimal:2',
         'tax_amount_in_base_currency' => 'decimal:2',
+        'payment_type' => PaymentType::class,
     ];
 
     public static function boot()
@@ -124,6 +127,16 @@ class Sale extends Model
     /**
      * Get loyalty transactions for this sale.
      */
+    public function installments(): HasMany
+    {
+        return $this->hasMany(SaleInstallment::class);
+    }
+
+    public function isInstallment(): bool
+    {
+        return $this->payment_type === PaymentType::Installment;
+    }
+
     public function loyaltyTransactions(): HasMany
     {
         return $this->hasMany(LoyaltyTransaction::class);

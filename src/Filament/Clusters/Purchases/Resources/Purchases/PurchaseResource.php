@@ -4,7 +4,9 @@ namespace Gopos\Filament\Clusters\Purchases\Resources\Purchases;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -118,6 +120,17 @@ class PurchaseResource extends Resource
         $set('total_amount', $totalAmount);
 
         // Recalculate subtotal and total amount
+        self::recalculateAllTotals($set, $get);
+    }
+
+    private static function recalculateItemTotal(Set $set, Get $get): void
+    {
+        $cost = (float) ($get('cost') ?? 0.00);
+        $stock = (float) ($get('stock') ?? 0.00);
+        $totalAmount = self::roundMoney($stock * $cost);
+
+        $set('total_amount', $totalAmount);
+
         self::recalculateAllTotals($set, $get);
     }
 
@@ -255,15 +268,17 @@ class PurchaseResource extends Resource
                                     ->default(1.00)
                                     ->minValue(0.01)
                                     ->live(debounce: 400)
-                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::calculateProductTotal($set, $get))
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::recalculateItemTotal($set, $get))
                                     ->required(),
 
                                 TextInput::make('cost')
-                                    ->label(__('Cost (Converted)'))
+                                    ->label(__('Cost'))
                                     ->required()
-                                    ->readOnly()
                                     ->numeric()
                                     ->default(0.00)
+                                    ->minValue(0)
+                                    ->live(debounce: 400)
+                                    ->afterStateUpdated(fn (Set $set, Get $get) => self::recalculateItemTotal($set, $get))
                                     ->prefix(function (Get $get) {
                                         $currencyId = $get('../../currency_id');
                                         $currency = Currency::find($currencyId);
@@ -473,6 +488,8 @@ class PurchaseResource extends Resource
                         return self::getUrl('invoice', ['record' => $record]);
                     }),
                 ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
                 Action::make('create_return')
                     ->label(__('Return'))
                     ->icon('heroicon-o-arrow-uturn-left')

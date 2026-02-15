@@ -2,6 +2,7 @@
 
 namespace Gopos\Database\Factories;
 
+use Gopos\Enums\PaymentType;
 use Gopos\Models\Currency;
 use Gopos\Models\Sale;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -30,6 +31,7 @@ class SaleFactory extends Factory
             'paid_amount' => $subTotal,
             'amount_in_base_currency' => $subTotal,
             'status' => 'paid',
+            'payment_type' => PaymentType::Full,
         ];
     }
 
@@ -52,6 +54,14 @@ class SaleFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status' => 'partial',
+        ]);
+    }
+
+    public function installment(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'payment_type' => PaymentType::Installment,
+            'paid_amount' => 0,
         ]);
     }
 }

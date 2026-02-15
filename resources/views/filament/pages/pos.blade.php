@@ -192,9 +192,28 @@
                                         </h4>
                                         <div
                                             class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                            <span>{{ number_format($item['price'], $currency->decimal_places ?? 0) }}
-                                                {{ $currency->symbol ?? 'IQD' }}</span>
-                                            <span>•</span>
+                                            <div class="flex items-center gap-1">
+                                                <input type="number"
+                                                    wire:model.live.debounce.400ms="cart.{{ $key }}.price"
+                                                    min="0"
+                                                    step="any"
+                                                    class="w-20 text-xs font-medium text-gray-900 dark:text-white bg-transparent border border-gray-300 dark:border-gray-600 rounded px-1.5 py-0.5 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                <span>{{ $currency->symbol ?? 'IQD' }}</span>
+                                                @php
+                                                    $baseCur = $currencies->where('base', true)->first();
+                                                    $expectedPrice = $item['original_price'];
+                                                    if ($currency && $baseCur && $currency->id !== $baseCur->id) {
+                                                        $expectedPrice = ($item['original_price'] * $currency->exchange_rate) / $baseCur->exchange_rate;
+                                                    }
+                                                    $isPriceOverridden = abs((float) $item['price'] - $expectedPrice) > 0.01;
+                                                @endphp
+                                                @if ($isPriceOverridden)
+                                                    <span class="text-warning-500" title="{{ __('Price overridden') }}">
+                                                        <x-heroicon-o-pencil-square class="w-3 h-3 inline" />
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <span>&bull;</span>
                                             <span>{{ $item['unit'] }}</span>
                                         </div>
 

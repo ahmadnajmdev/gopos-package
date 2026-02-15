@@ -4,6 +4,48 @@
         @livewire('sale-invoice', ['sale' => $sale])
     </div>
 
+    @if($sale->isInstallment() && $sale->installments->isNotEmpty())
+        <div class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 p-6 mt-6">
+            <h3 class="text-lg font-semibold mb-4">{{ __('Installment Schedule') }}</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-start">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th class="px-3 py-2 text-start font-medium text-gray-500 dark:text-gray-400">#</th>
+                            <th class="px-3 py-2 text-start font-medium text-gray-500 dark:text-gray-400">{{ __('Due Date') }}</th>
+                            <th class="px-3 py-2 text-start font-medium text-gray-500 dark:text-gray-400">{{ __('Amount') }}</th>
+                            <th class="px-3 py-2 text-start font-medium text-gray-500 dark:text-gray-400">{{ __('Paid') }}</th>
+                            <th class="px-3 py-2 text-start font-medium text-gray-500 dark:text-gray-400">{{ __('Remaining') }}</th>
+                            <th class="px-3 py-2 text-start font-medium text-gray-500 dark:text-gray-400">{{ __('Status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($sale->installments->sortBy('installment_number') as $installment)
+                            <tr class="border-b border-gray-100 dark:border-gray-800">
+                                <td class="px-3 py-2">{{ $installment->installment_number }}</td>
+                                <td class="px-3 py-2">{{ $installment->due_date->format('Y-m-d') }}</td>
+                                <td class="px-3 py-2">{{ number_format($installment->amount, 2) }}</td>
+                                <td class="px-3 py-2">{{ number_format($installment->paid_amount, 2) }}</td>
+                                <td class="px-3 py-2">{{ number_format($installment->remaining, 2) }}</td>
+                                <td class="px-3 py-2">
+                                    <span @class([
+                                        'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
+                                        'bg-yellow-50 text-yellow-700 ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:ring-yellow-400/20' => $installment->status === \Gopos\Enums\InstallmentStatus::Pending,
+                                        'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-400/10 dark:text-green-500 dark:ring-green-400/20' => $installment->status === \Gopos\Enums\InstallmentStatus::Paid,
+                                        'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-400/10 dark:text-red-500 dark:ring-red-400/20' => $installment->status === \Gopos\Enums\InstallmentStatus::Overdue,
+                                        'bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-500 dark:ring-blue-400/20' => $installment->status === \Gopos\Enums\InstallmentStatus::Partial,
+                                    ])>
+                                        {{ $installment->status->getLabel() }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
     @script
     <script>
         // Print invoice function

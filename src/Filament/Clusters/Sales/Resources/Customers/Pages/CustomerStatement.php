@@ -86,27 +86,37 @@ class CustomerStatement extends Page implements HasForms, HasTable
                     ->label(__('Balance'))
                     ->numeric(locale: 'en')
                     ->suffix(fn ($record) => ' '.($record->currency?->symbol ?? ''))
-                    ->getStateUsing(fn (Sale $record): float => $record->total_amount - $record->paid_amount)
-                    ->color(fn (Sale $record): string => $record->total_amount - $record->paid_amount > 0 ? 'danger' : 'success'
+                    ->getStateUsing(fn (Sale $record): float => $record->total_amount - $record->paid_amount - ($record->returns_sum_total_amount ?? 0))
+                    ->color(fn (Sale $record): string => $record->total_amount - $record->paid_amount - ($record->returns_sum_total_amount ?? 0) > 0 ? 'danger' : 'success'
                     ),
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->badge()
-                    ->getStateUsing(fn (Sale $record): string => $record->paid_amount == 0 ? __('Unpaid') :
-                        ($record->paid_amount >= $record->total_amount ? __('Paid') : __('Partially Paid'))
-                    )
-                    ->color(fn (Sale $record): string => $record->paid_amount == 0 ? 'danger' :
-                        ($record->paid_amount >= $record->total_amount ? 'success' : 'warning')
-                    ),
+                    ->getStateUsing(function (Sale $record): string {
+                        $effectiveTotal = $record->total_amount - ($record->returns_sum_total_amount ?? 0);
+                        if ($record->paid_amount >= $effectiveTotal) {
+                            return __('Paid');
+                        }
+
+                        return $record->paid_amount == 0 ? __('Unpaid') : __('Partially Paid');
+                    })
+                    ->color(function (Sale $record): string {
+                        $effectiveTotal = $record->total_amount - ($record->returns_sum_total_amount ?? 0);
+                        if ($record->paid_amount >= $effectiveTotal) {
+                            return 'success';
+                        }
+
+                        return $record->paid_amount == 0 ? 'danger' : 'warning';
+                    }),
             ])
             ->recordActions([
                 Action::make('pay')
                     ->label(__('Pay'))
                     ->icon(Heroicon::OutlinedBanknotes)
                     ->color('success')
-                    ->visible(fn (Sale $record): bool => $record->total_amount - $record->paid_amount > 0)
+                    ->visible(fn (Sale $record): bool => $record->total_amount - $record->paid_amount - ($record->returns_sum_total_amount ?? 0) > 0)
                     ->fillForm(fn (Sale $record): array => [
-                        'amount' => round($record->total_amount - $record->paid_amount, 2),
+                        'amount' => round($record->total_amount - $record->paid_amount - ($record->returns_sum_total_amount ?? 0), 2),
                         'currency_id' => $record->currency_id,
                     ])
                     ->schema([
@@ -164,35 +174,62 @@ class CustomerStatement extends Page implements HasForms, HasTable
 
     protected function getTableQuery(): Builder
     {
-        $query = $this->getRecord()->sales()->getQuery();
-
-        return $query;
+        return $this->getRecord()->sales()->getQuery()
+            ->withSum('returns', 'total_amount');
     }
 
     public function getCustomerSummary(): array
     {
         $customer = $this->getRecord();
         $sales = $this->getTableQuery()->get();
+        $baseCurrency = Currency::getBaseCurrency();
 
         $totalSales = $sales->sum('amount_in_base_currency');
-        $totalPaid = $sales->sum(function ($sale) {
-            if ($sale->currency_id == Currency::getBaseCurrency()->id) {
+
+        $totalReturns = $sales->sum(function ($sale) use ($baseCurrency) {
+            $returnsTotal = $sale->returns_sum_total_amount ?? 0;
+            if ($returnsTotal == 0) {
+                return 0;
+            }
+            if ($sale->currency_id == $baseCurrency?->id) {
+                return $returnsTotal;
+            }
+
+            return $sale->currency?->convertFromCurrency($returnsTotal, $sale->currency->code) ?? $returnsTotal;
+        });
+
+        $totalPaid = $sales->sum(function ($sale) use ($baseCurrency) {
+            if ($sale->currency_id == $baseCurrency?->id) {
                 return $sale->paid_amount;
             }
 
-            return $sale->currency->convertFromCurrency($sale->paid_amount, $sale->currency->code);
+            return $sale->currency?->convertFromCurrency($sale->paid_amount, $sale->currency->code) ?? $sale->paid_amount;
         });
-        $totalBalance = $totalSales - $totalPaid;
+
+        $totalBalance = $totalSales - $totalReturns - $totalPaid;
 
         return [
             'customer' => $customer,
             'total_sales' => $totalSales,
+            'total_returns' => $totalReturns,
             'total_paid' => $totalPaid,
             'total_balance' => $totalBalance,
             'total_invoices' => $sales->count(),
-            'paid_invoices' => $sales->where('paid_amount', '>=', 'total_amount')->count(),
-            'unpaid_invoices' => $sales->where('paid_amount', 0)->count(),
-            'partial_invoices' => $sales->where('paid_amount', '>', 0)->where('paid_amount', '<', 'total_amount')->count(),
+            'paid_invoices' => $sales->filter(function ($sale) {
+                $effectiveTotal = $sale->total_amount - ($sale->returns_sum_total_amount ?? 0);
+
+                return $sale->paid_amount >= $effectiveTotal || $effectiveTotal <= 0;
+            })->count(),
+            'unpaid_invoices' => $sales->filter(function ($sale) {
+                $effectiveTotal = $sale->total_amount - ($sale->returns_sum_total_amount ?? 0);
+
+                return $sale->paid_amount == 0 && $effectiveTotal > 0;
+            })->count(),
+            'partial_invoices' => $sales->filter(function ($sale) {
+                $effectiveTotal = $sale->total_amount - ($sale->returns_sum_total_amount ?? 0);
+
+                return $sale->paid_amount > 0 && $sale->paid_amount < $effectiveTotal;
+            })->count(),
         ];
     }
 
@@ -249,7 +286,8 @@ class CustomerStatement extends Page implements HasForms, HasTable
 
     protected function processPayment(Sale $sale, array $data): void
     {
-        $remaining = round($sale->total_amount - $sale->paid_amount, 2);
+        $returnsTotal = $sale->returns()->sum('total_amount');
+        $remaining = round($sale->total_amount - $sale->paid_amount - $returnsTotal, 2);
         $amount = (float) $data['amount'];
 
         if ($amount > $remaining) {
@@ -268,7 +306,7 @@ class CustomerStatement extends Page implements HasForms, HasTable
             ? $currency->convertFromCurrency($amount, $currency->code)
             : $amount;
 
-        DB::transaction(function () use ($sale, $data, $amount, $exchangeRate, $amountInBase) {
+        DB::transaction(function () use ($sale, $data, $amount, $exchangeRate, $amountInBase, $returnsTotal) {
             $sale->payments()->create([
                 'payment_method' => $data['payment_method'],
                 'amount' => $amount,
@@ -280,7 +318,8 @@ class CustomerStatement extends Page implements HasForms, HasTable
             ]);
 
             $newPaidAmount = $sale->paid_amount + $amount;
-            $status = $newPaidAmount >= $sale->total_amount ? 'paid' : 'partial';
+            $effectiveTotal = $sale->total_amount - $returnsTotal;
+            $status = $newPaidAmount >= $effectiveTotal ? 'paid' : 'partial';
 
             $sale->update([
                 'paid_amount' => $newPaidAmount,
@@ -308,7 +347,8 @@ class CustomerStatement extends Page implements HasForms, HasTable
 
         $unpaidSales = $this->getRecord()
             ->sales()
-            ->whereColumn('paid_amount', '<', 'total_amount')
+            ->withSum('returns', 'total_amount')
+            ->whereRaw('paid_amount < total_amount - COALESCE((SELECT SUM(total_amount) FROM sale_returns WHERE sale_returns.sale_id = sales.id), 0)')
             ->orderBy('sale_date', 'asc')
             ->orderBy('id', 'asc')
             ->get();
@@ -328,11 +368,12 @@ class CustomerStatement extends Page implements HasForms, HasTable
                     break;
                 }
 
-                $saleBalance = round($sale->total_amount - $sale->paid_amount, 2);
+                $returnsTotal = $sale->returns_sum_total_amount ?? 0;
+                $saleBalance = round($sale->total_amount - $sale->paid_amount - $returnsTotal, 2);
 
                 if ($sale->currency_id !== (int) $data['currency_id']) {
-                    $saleBalanceInPaymentCurrency = $baseCurrency && $currency
-                        ? round($sale->amount_in_base_currency * ($currency->exchange_rate / $baseCurrency->exchange_rate) - $sale->paid_amount, 2)
+                    $saleBalanceInPaymentCurrency = ($sale->currency && $currency && $sale->currency->exchange_rate)
+                        ? round($saleBalance * $currency->exchange_rate / $sale->currency->exchange_rate, 2)
                         : $saleBalance;
                     $payAmount = min($remaining, max($saleBalanceInPaymentCurrency, 0));
                     $payAmountInSaleCurrency = $sale->currency
@@ -363,7 +404,8 @@ class CustomerStatement extends Page implements HasForms, HasTable
                 ]);
 
                 $newPaidAmount = $sale->paid_amount + $payAmountInSaleCurrency;
-                $status = $newPaidAmount >= $sale->total_amount ? 'paid' : 'partial';
+                $effectiveTotal = $sale->total_amount - $returnsTotal;
+                $status = $newPaidAmount >= $effectiveTotal ? 'paid' : 'partial';
 
                 $sale->update([
                     'paid_amount' => $newPaidAmount,

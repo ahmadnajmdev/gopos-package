@@ -83,6 +83,12 @@ class PermissionService
                 'hr.manage_payroll' => 'Manage Payroll',
                 'hr.view_reports' => 'View HR Reports',
             ],
+            'quotations' => [
+                'quotations.view' => 'View Quotations',
+                'quotations.create' => 'Create Quotations',
+                'quotations.edit' => 'Edit Quotations',
+                'quotations.delete' => 'Delete Quotations',
+            ],
             'reports' => [
                 'reports.sales' => 'Sales Reports',
                 'reports.inventory' => 'Inventory Reports',
@@ -170,6 +176,11 @@ class PermissionService
             'hr.view_payroll' => 'عرض الرواتب',
             'hr.manage_payroll' => 'إدارة الرواتب',
             'hr.view_reports' => 'عرض تقارير الموارد البشرية',
+            // Quotations
+            'quotations.view' => 'عرض عروض الأسعار',
+            'quotations.create' => 'إنشاء عروض الأسعار',
+            'quotations.edit' => 'تعديل عروض الأسعار',
+            'quotations.delete' => 'حذف عروض الأسعار',
             // Reports
             'reports.sales' => 'تقارير المبيعات',
             'reports.inventory' => 'تقارير المخزون',
@@ -254,6 +265,11 @@ class PermissionService
             'hr.view_payroll' => 'بینینی مووچە',
             'hr.manage_payroll' => 'بەڕێوەبردنی مووچە',
             'hr.view_reports' => 'بینینی ڕاپۆرتی سەرچاوەکانی مرۆڤی',
+            // Quotations
+            'quotations.view' => 'بینینی نرخنامەکان',
+            'quotations.create' => 'دروستکردنی نرخنامە',
+            'quotations.edit' => 'دەستکاریکردنی نرخنامە',
+            'quotations.delete' => 'سڕینەوەی نرخنامە',
             // Reports
             'reports.sales' => 'ڕاپۆرتی فرۆشتن',
             'reports.inventory' => 'ڕاپۆرتی بڕ',
